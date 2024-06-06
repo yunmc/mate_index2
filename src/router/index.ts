@@ -36,6 +36,14 @@ const router = createRouter({
                         keepAlive: false,
                     },
                 },
+                {
+                    path: 'about',
+                    component: () => import('@/views/about.vue'),
+                    meta: {
+                        title: '',
+                        keepAlive: false,
+                    },
+                },
             ],
         },
     ],

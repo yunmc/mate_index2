@@ -23,7 +23,7 @@ function setRem() {
 setRem();
 window.onresize = setRem;
 
-const { VITE_GOOGLE_ID } = import.meta.env;
+const { VITE_GOOGLE_ID = '' } = import.meta.env;
 const app = createApp(App);
 app.config.globalProperties.$sensors = senSorsInit();
 app.config.globalProperties.$isMobile = isMobile;
@@ -31,8 +31,12 @@ const pinia = createPinia();
 pinia.use(piniaPersist);
 app.use(pinia);
 app.use(router);
-app.use(GoogleSignInPlugin, {
-    clientId: VITE_GOOGLE_ID,
-});
+try {
+    app.use(GoogleSignInPlugin, {
+        clientId: VITE_GOOGLE_ID,
+    });
+} catch (e) {
+    console.log(e);
+}
 app.use(VideoPlayer)
 app.mount('#app');
