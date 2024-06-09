@@ -56,7 +56,7 @@ const isClicked = inject('isClicked')
                 <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img square-40 m-r-12
                         src="@/assets/images/logo.webp" /> MateLink </div>
             </RouterLink>
-            <div v-if="!userStore.Token" flex-end-center>
+            <div v-if="!userStore.Token" flex-end-center class="userBox">
                 <span w-90 h-32 color="#FFFFFF" center border-FFB524 bg-FFB524 border-solid border-1 border-radius-8
                     fs-14 m-r-8 c-p @click="popupLogin">Register</span>
                 <span w-90 h-32 color="#FFB524" center border-1 border-solid border-FFB524 border-radius-8 fs-14 c-p
