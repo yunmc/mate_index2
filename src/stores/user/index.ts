@@ -24,6 +24,7 @@ export const useUserStore = defineStore({
                     .then((response: any) => {
                         if (response.code == 200) {
                             this.userInfo.coins_balance = response.data.coins_balance;
+                            this.userInfo.vip_info = response.data.vip_info;
                             resolve(response);
                         }
                     })

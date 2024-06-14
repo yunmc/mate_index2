@@ -10,15 +10,21 @@ const handleClick = () => {
     userStore.isPopupContactUs = false;
 };
 const submit = async (): Promise<any> => {
-
+    console.log('submit',btnStatus);
+    if(!btnStatus.value){
+        return
+    }
     const params = {
-        feedback_description: 'testname_01',
-        email: '123'
+        feedback_description: form.desc,
+        email: form.email
     };
     const data: any = await contactUs(params);
 
     if (data.code === 200) {
         message.success('submit success');
+        userStore.isPopupContactUs = false;
+        form.email = '';
+        form.desc = '';
     } else {
     }
 };
@@ -47,15 +53,16 @@ watch(
     <div>
         <NModal v-model:show="userStore.isPopupContactUs" :on-after-leave="handleClick">
             <div class="contactUs">
+                <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
                 <p class="title">Contact us </p>
                 <p class="tips">Write your message here.</p>
-                <p class="i-title">Your email</p>
-                <NInput placeholder="Enter your email address" type="text" h-48 class="text"
+                <p class="i-title" m-b-6>Your email</p>
+                <NInput placeholder="Enter your email address" type="text" class="text"
                     v-model:value="form.email" />
-                <p class="i-title">Description</p>
-                <NInput placeholder="Describe your problem" type="textarea" h-48 class="textarea"
+                <p class="i-title" m-b-6>Description</p>
+                <NInput placeholder="Describe your problem" type="textarea" class="textarea"
                     v-model:value="form.desc" />
-                <p @click="submit" class="btn" :class="btnStatus ? 'can' : 'cant'">提交</p>
+                <p @click="submit" class="btn" :class="btnStatus ? 'can' : 'cant'">Send</p>
             </div>
         </NModal>
     </div>
@@ -67,7 +74,13 @@ watch(
     background: #1A1E28;
     border-radius: 16px;
     padding: 30px 24px 48px;
-
+    position: relative;
+    .close{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        cursor: pointer;
+    }
     .title {
         color: #fff;
         font-size: 24px;
@@ -84,6 +97,27 @@ watch(
         color: #fff;
         margin-top: 24px;
     }
+    .text{
+        height: 48px;
+        border: 1px;
+        background: #1A1E28;
+        :deep(.n-input__input-el){
+            height: 48px;
+            color: #fff;
+        }
+    }
+    .textarea{
+        height: 100px;
+        border: 1px;
+        background: #1A1E28;
+        color: #fff;
+        :deep(.n-input-wrapper){
+            resize: none;
+        }
+        :deep(textarea){
+            color: #fff;
+        }
+    }
     .btn{
         width: 336px;
         height: 40px;
@@ -96,11 +130,14 @@ watch(
     .can{
         background: linear-gradient(114.24deg, #FFB524 16.28%, #FF8C39 94.9%);
         color: #222222;
+        cursor: pointer;
+        font-weight: 700;
         
     }
     .cant{
         background: #27272A;
         color: #A3A2A2;
+        cursor: no-drop;
     }
 }
 </style>

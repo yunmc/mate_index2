@@ -10,7 +10,7 @@ const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
 const ChatStore = useChatStore();
 const emit = defineEmits(['changePosition']);
-const prev = () => {
+const prevM = () => {
     emit('changePosition', 100);
 };
 watch(
@@ -37,7 +37,7 @@ const showPhoto = (): void => {
 
 <template>
     <div class="banner" v-if="ChatStore.aiInfo">
-        <img src="@/assets/images/prev_icon.svg" class="prev" @click="prev" />
+        <img src="@/assets/images/prev_icon.svg" class="prevM" @click="prevM" />
         <div class="mask" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="router.push('/becomePro')">
             <div class="btn" v-if="userStore.userInfo?.vip_info.vip_type == 0">Pro Unlock</div>
         </div>
@@ -69,8 +69,9 @@ const showPhoto = (): void => {
 
             <div class="tag" flex-flex-start-center flex-wrap>
                 <span v-for="item in ChatStore.aiInfo.tags" :key="item" fs-12 p-x-12 p-y-6>{{ item }}</span>
+                <span v-for="item in ChatStore.aiInfo.common_tags" :key="item" fs-12 p-x-12 p-y-6>{{ item.tag_name }}</span>
             </div>
-
+            <div color-fff fs-24 line-height-32>introduce</div>
             <div class="introduce" m-t-10 fs-14 line-height-24>
                 {{ ChatStore.aiInfo.ai_desc }}
             </div>
@@ -83,7 +84,7 @@ const showPhoto = (): void => {
 <style lang="less" scoped>
 .banner {
     height: calc(100vh - 280px);
-    .prev{
+    .prevM{
         display: none;
     }
 
@@ -209,7 +210,7 @@ const showPhoto = (): void => {
 }
 @media screen and (max-width: 768px){
     .banner{
-        .prev{
+        .prevM{
             display: block;
             position: absolute;
             top: 0.14rem;

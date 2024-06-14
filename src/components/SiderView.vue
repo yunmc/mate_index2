@@ -31,6 +31,9 @@ const toBecomePro = () => {
     }
 };
 const isClicked = inject('isClicked')
+const windowOpen = (url: string) => {
+    window.open(url);
+};
 </script>
 
 <template>
@@ -58,16 +61,16 @@ const isClicked = inject('isClicked')
             </p>
         </div>
         <div class="menu-bottom" p-30>
-            <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
+            <p @click="windowOpen('https://discord.gg/txKxnFeBdt')" flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
                 border-radius-10 c-p m-b-16 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }"><img src="@/assets/images/discord_icon.svg" m-l-12 m-r-10
                     square-24 />Discord</p>
-            <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
+            <!-- <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
                 border-radius-10 c-p m-b-16 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }"><img src="@/assets/images/tikTok_icon.svg" m-l-12 m-r-10 square-24 />Tik Tok
             </p>
             <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
                 border-radius-10 c-p m-b-16 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }"><img src="@/assets/images/Instagram_icon.svg" m-l-12 m-r-10
-                    square-24 />Instagram</p>
-            <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
+                    square-24 />Instagram</p> -->
+            <p @click="windowOpen('https://x.com/Matelink280248')" flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
                 border-radius-10 c-p m-b-16 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }"><img src="@/assets/images/Facebook_icon.svg" m-l-12 m-r-10
                     square-24 />Facebook</p>
         </div>

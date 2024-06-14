@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { inject,getCurrentInstance } from 'vue';
+import { inject,getCurrentInstance,onMounted } from 'vue';
 import PopupProfile from '../components/popup/proFile.vue';
 import Login from '../components/login/index.vue';
 import { useMessage } from 'naive-ui';
@@ -8,6 +8,7 @@ import { useOneTap, type CredentialResponse } from "vue3-google-signin";
 
 const message = useMessage();
 const app = getCurrentInstance();
+const useStore = useUserStore();
 const sensors = app?.appContext.config.globalProperties.$sensors;
 const isMobile = app?.appContext.config.globalProperties.$isMobile;
 const { isReady, login } = useOneTap({
@@ -46,6 +47,9 @@ const popupLogin = (): void => {
     userStore.isPopupLogin = true;
 };
 const isClicked = inject('isClicked')
+onMounted(() => {
+    useStore.getUser()
+});
 </script>
 
 <template>
@@ -79,7 +83,7 @@ const isClicked = inject('isClicked')
                         </p>
                         <p fs-14 center c-p @click="userStore.logOut()">
                             <img src="@/assets/images/signOut_icon.svg" />
-                            <span>Logout</span>
+                            <span>Sign Out</span>
                         </p>
                     </div>
                 </div>

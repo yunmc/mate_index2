@@ -17,7 +17,7 @@ const sensors = app?.appContext.config.globalProperties.$sensors;
 const bannerInfo = ref({} as any);
 const _getBanner = async () => {
     const params = {
-        channel_name: 'testname_01'
+        channel_name: 'likaixuantest'
     };
     const data: any = await getBanner(params);
     if (data.code === 200) {
@@ -25,6 +25,7 @@ const _getBanner = async () => {
     }
 };
 const toDetails = (item: any) => {
+    //记录当前滚动条位置
     if (!userStore.Token) {
         userStore.isPopupLogin = true;
     } else if (item) {
@@ -64,12 +65,19 @@ onMounted(() => {
         userStore.payType = true;
     }
     sensors.track('h5_homepage_view', {});
+    var scrollPosition = localStorage.getItem('scrollPosition');
+    setTimeout(() => {
+        if (scrollPosition) {
+            mainRef.value.scrollTop = scrollPosition;
+        }
+    }, 100);
 });
 const mainRef = ref(null);
 const handleScroll = (event: any) => {
     const scrollHeight = event.target.scrollHeight;
     const scrollTop = event.target.scrollTop;
     const clientHeight = event.target.clientHeight;
+    localStorage.setItem('scrollPosition', event.target.scrollTop);
     if (scrollTop + clientHeight >= scrollHeight) {
         if (!homeStore.loading && !homeStore.finish) {
             homeStore.page++;
@@ -138,7 +146,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                                 {{ item.name }}
                             </div>
                             <div fs-12 len-16 m-b-10 class="moment">
-                                {{ item.moment ? item.moment : item.introduce }}
+                                {{ item.ai_desc ? item.ai_desc : item.introduce }}
                             </div>
                             <div flex-flex-start-center>
                                 <p v-for="t in item.tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 class="tab_bg">

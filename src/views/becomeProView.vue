@@ -15,7 +15,7 @@ const mealList = reactive([
         pay_platform: "paypal_sub", //订阅平台 一定要是这个
         active: true,
         popular: false,
-        months:1
+        months: 1
     }, {
         product_name: "Yearly",
         product_id: "mateLink.paypal.year.pro.plan", // 产品ID
@@ -24,7 +24,7 @@ const mealList = reactive([
         pay_platform: "paypal_sub", //订阅平台 一定要是这个
         active: false,
         popular: true,
-        months:12
+        months: 12
     }
 ])
 const active = ref(mealList[0])
@@ -36,18 +36,22 @@ const choosePlan = (item: any, i: number) => {
     active.value = item;
 };
 const paypal = async () => {
-    show.value = true;
-    const data: any = await oredrStore.getProPay({
-        product_id: active.value.product_id, // 产品ID
-        rawPrice: active.value.rawPrice * active.value.months, // 金额大小
-        currencyCode: "USD", // 金额类别
-        pay_platform: "paypal_sub", //订阅平台 一定要是这
-        is_web: true
-    });
-    show.value = false;
-    if (data.code == 200 && data.data.approve_url != '') {
-        console.log(data.data.approval_url)
-        window.location.href = data.data.approval_url;
+    if (!userStore.Token) {
+        userStore.isPopupLogin = true;
+    } else {
+        show.value = true;
+        const data: any = await oredrStore.getProPay({
+            product_id: active.value.product_id, // 产品ID
+            rawPrice: active.value.rawPrice * active.value.months, // 金额大小
+            currencyCode: "USD", // 金额类别
+            pay_platform: "paypal_sub", //订阅平台 一定要是这
+            is_web: true
+        });
+        show.value = false;
+        if (data.code == 200 && data.data.approve_url != '') {
+            console.log(data.data.approval_url)
+            window.location.href = data.data.approval_url;
+        }
     }
 };
 </script>
@@ -65,7 +69,8 @@ const paypal = async () => {
                     <div class="mealList">
                         <div v-for="(item, i) in mealList" :class="item.active ? 'mealCont active' : 'mealCont'"
                             @click="choosePlan(item, i)">
-                            <p class="productName">{{ item.product_name }}</p>
+                            <p class="productName">{{ item.product_name }}<span v-if="item.product_name == 'Yearly'"
+                                    class="desc">Save 70%</span></p>
                             <p class="productPrice"><span>${{ item.rawPrice }}</span> / month</p>
                             <p class="tips" v-if="item.popular">Popular</p>
                         </div>
@@ -175,6 +180,21 @@ const paypal = async () => {
                         font-size: 30px;
                         font-weight: 700;
                         color: #FF8C39;
+
+                        .desc {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #fff;
+                            margin-left: 4px;
+                            background: linear-gradient(135deg, rgba(141, 44, 255, 0.15) 7.86%, rgba(238, 47, 93, 0.15) 50.71%, rgba(255, 39, 208, 0.15) 100%);
+                            width: 110px;
+                            height: 34px;
+                            display: inline-block;
+                            text-align: center;
+                            border-radius: 24px;
+                            border: 2px solid #F52D8A;
+                            line-height: 30px;
+                        }
                     }
 
                     .productPrice {
@@ -268,6 +288,7 @@ const paypal = async () => {
         }
     }
 }
+
 @media screen and (max-width: 768px) {
     .becomePro {
         .proCont {
@@ -276,40 +297,51 @@ const paypal = async () => {
             padding: 0 0.29rem;
             margin: 0;
             display: block;
-            .proContLeft{
+
+            .proContLeft {
                 width: 100%;
-                .title{
+
+                .title {
                     margin-bottom: 0.1rem;
-                    img{
+
+                    img {
                         width: 60%;
                     }
-                    span{
+
+                    span {
                         font-size: 0.35rem;
                     }
                 }
-                .desc{
+
+                .desc {
                     font-size: 0.16rem;
                     line-height: 0.22rem;
                 }
-                .mealList{
+
+                .mealList {
                     display: flex;
                     justify-content: space-between;
-                    .mealCont{
+
+                    .mealCont {
                         width: 1.58rem;
                         padding: 0.1rem 0 0.1rem 0.2rem;
                         margin-top: 0.21rem;
-                        .productName{
+
+                        .productName {
                             font-size: 0.2rem;
                         }
-                        .productPrice{
+
+                        .productPrice {
                             font-size: 0.2rem;
                             line-height: 1;
-                            span{
+
+                            span {
                                 font-size: 0.33rem;
-                            line-height: 0.48rem;
+                                line-height: 0.48rem;
                             }
                         }
-                        .tips{
+
+                        .tips {
                             width: 0.6rem;
                             height: 0.22rem;
                             border-radius: 0.08rem;
@@ -320,7 +352,8 @@ const paypal = async () => {
                         }
                     }
                 }
-                .btn{
+
+                .btn {
                     width: 100%;
                     height: 0.45rem;
                     border-radius: 0.22rem;
@@ -329,22 +362,27 @@ const paypal = async () => {
                     line-height: 0.45rem;
                 }
             }
-            .proContRight{
+
+            .proContRight {
                 margin-top: 0.2rem;
                 width: 100%;
-                .title{
+
+                .title {
                     font-size: 0.36rem;
                     padding-left: 0.38rem;
 
                 }
-                .benefitsList{
-                    p{
+
+                .benefitsList {
+                    p {
                         margin-top: 0.12rem;
                         height: 0.3rem;
-                        img{
+
+                        img {
                             width: 0.24rem;
                         }
-                        span{
+
+                        span {
                             font-size: 0.18rem;
                         }
                     }
@@ -352,6 +390,6 @@ const paypal = async () => {
             }
         }
     }
-    
+
 }
 </style>

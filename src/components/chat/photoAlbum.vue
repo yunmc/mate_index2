@@ -52,10 +52,12 @@ watch(
                         <n-image-group show-toolbar-tooltip>
                             <n-space class="picBox">
                                 <n-image v-for="(item, i) in photoList" width="100%" :src="item.pic_url" />
+                                <i></i>
+                                <i></i>
                             </n-space>
                         </n-image-group>
                     </div>
-                    <div class="cont empty" v-else>空相册 </div>
+                    <div class="cont empty" v-else>Empty photo album</div>
                 </div>
             </NSpin>
         </NModal>
@@ -73,7 +75,7 @@ watch(
                     </n-space>
                 </n-image-group>
             </div>
-            <div class="cont empty" v-else>空相册 </div>
+            <div class="cont empty" v-else>Empty photo album </div>
         </div>
     </div>
 </template>
@@ -124,6 +126,9 @@ watch(
                 img {
                     width: 100%;
                 }
+            }
+            i{
+                width: 308px;
             }
         }
     }
@@ -179,6 +184,9 @@ watch(
                     img {
                         width: 100%;
                     }
+                }
+                i{
+                    width: 1.72rem;
                 }
             }
         }

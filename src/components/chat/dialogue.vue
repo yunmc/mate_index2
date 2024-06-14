@@ -197,12 +197,12 @@ const darkThemeOverrides = {
                     <template v-if="item.to == userStore.userInfo.uid">
                         <div class="dialogue"
                             v-if="item.content.data.extra.dataType == 'text' || item.content.data.extra.dataType == 'audio'">
-                            <div>
-                                <img class="video" square-20 v-if="item.content.data.extra.dataType == 'audio'"
-                                    @click="openApp('')" src="@/assets/images/voice.webp" />
+                            <div style="display: flex;justify-content: space-between;width: 100%;">
                                 <span v-if="item.content.data.extra.dataType == 'text'">{{
                                     item.content.data.extra.data.context }}</span>
                                 <span v-else>{{ item.content.data.extra.data.audioContext }}</span>
+                                <img class="video" square-32 v-if="item.content.data.extra.dataType == 'audio'"
+                                    @click="openApp('')" src="@/assets/images/voice.svg" />
                             </div>
                             <!-- <p class="icon" v-if="item.content.data.extra.data.is_like">
                                 <img c-p v-if="item.content.data.extra.data.is_like == 'dislike'" src="@/assets/images/chat_icon_2.webp" />
@@ -228,7 +228,7 @@ const darkThemeOverrides = {
                                     @click.stop="router.push('/becomePro')">
                                     <!-- unlockImage(item, index) -->
                                     <div center>
-                                        <p center style="padding: 0 30px; color: #FF9C31;border: 1px solid #FF9C31;">
+                                        <p class="dithering" center style="padding: 0 30px; color: #FF9C31;border: 1px solid #FF9C31;">
                                             Pro
                                             <!-- {{ item.content.data.extra.data.price }}
                                             <img square-18 m-l-3 src="@/assets/images/coin.webp" />  -->
@@ -271,9 +271,9 @@ const darkThemeOverrides = {
         </div> -->
         <div position-relative>
             <NConfigProvider preflight-style-disabled w-90p>
-                <NInput placeholder="Say something…" type="textarea" h-48 class="textarea" v-model:value="message" :autosize="{
+                <NInput placeholder="Say something…" type="textarea" class="textarea" v-model:value="message" :autosize="{
                     minRows: 1,
-                    maxRows: 3,
+                    maxRows: 5,
                 }" :theme-overrides="darkThemeOverrides" @blur="iskey = false" @focus="iskey = true"
                     onkeydown="if(event.keyCode==13)return false;" />
             </NConfigProvider>
@@ -309,6 +309,17 @@ const darkThemeOverrides = {
 }
 </style>
 <style lang="less" scoped>
+@keyframes dithering {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+.dithering {
+    
+  animation: dithering 0.5s ease-in-out;
+}
 .textarea {
     width: 100%;
     background: rgba(74, 81, 105, 0.5);
@@ -317,6 +328,7 @@ const darkThemeOverrides = {
     color: #ffffff;
     line-height: 18px;
     padding: 0 15px;
+    min-height: 48px;
 }
 
 .input {
@@ -348,10 +360,11 @@ const darkThemeOverrides = {
 
     .video {
         display: inline-block;
-        margin-right: 7px;
+        margin-right: 0;
         vertical-align: top;
         margin-top: 2px;
         cursor: pointer;
+        margin-left: 10px;
     }
 
     span {
@@ -367,7 +380,7 @@ const darkThemeOverrides = {
     margin-top: 18px;
 
     span {
-        background: #393655;
+        background: #202020;
         border-radius: 18px;
         padding: 12px;
         color: #ffffff;
