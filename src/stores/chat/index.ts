@@ -46,6 +46,7 @@ export const useChatStore = defineStore({
             const params = {
                 ai_uid: this.aiInfo.ai_uid,
                 is_true: true,
+                greeting: true
             };
             return new Promise((resolve, reject) => {
                 initChat(params)

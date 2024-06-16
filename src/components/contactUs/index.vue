@@ -1,8 +1,12 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, getCurrentInstance } from 'vue';
 import { NModal, useMessage, NInput } from 'naive-ui';
 import { useUserStore } from '@/stores/user';
 import { contactUs } from '@/api/order/index';
+import { getHashUrlParams } from '@/utils/common';
+
+const app = getCurrentInstance();
+const sensors = app?.appContext.config.globalProperties.$sensors;
 const userStore = useUserStore();
 const message = useMessage();
 
@@ -10,8 +14,8 @@ const handleClick = () => {
     userStore.isPopupContactUs = false;
 };
 const submit = async (): Promise<any> => {
-    console.log('submit',btnStatus);
-    if(!btnStatus.value){
+    console.log('submit', btnStatus);
+    if (!btnStatus.value) {
         return
     }
     const params = {
@@ -21,6 +25,12 @@ const submit = async (): Promise<any> => {
     const data: any = await contactUs(params);
 
     if (data.code === 200) {
+        sensors.track('user_feedback', {
+            issue_des: form.desc,
+            user_email: form.email,
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
         message.success('submit success');
         userStore.isPopupContactUs = false;
         form.email = '';
@@ -57,8 +67,7 @@ watch(
                 <p class="title">Contact us </p>
                 <p class="tips">Write your message here.</p>
                 <p class="i-title" m-b-6>Your email</p>
-                <NInput placeholder="Enter your email address" type="text" class="text"
-                    v-model:value="form.email" />
+                <NInput placeholder="Enter your email address" type="text" class="text" v-model:value="form.email" />
                 <p class="i-title" m-b-6>Description</p>
                 <NInput placeholder="Describe your problem" type="textarea" class="textarea"
                     v-model:value="form.desc" />
@@ -75,12 +84,14 @@ watch(
     border-radius: 16px;
     padding: 30px 24px 48px;
     position: relative;
-    .close{
+
+    .close {
         position: absolute;
         right: 15px;
         top: 15px;
         cursor: pointer;
     }
+
     .title {
         color: #fff;
         font-size: 24px;
@@ -97,28 +108,34 @@ watch(
         color: #fff;
         margin-top: 24px;
     }
-    .text{
+
+    .text {
         height: 48px;
         border: 1px;
         background: #1A1E28;
-        :deep(.n-input__input-el){
+
+        :deep(.n-input__input-el) {
             height: 48px;
             color: #fff;
         }
     }
-    .textarea{
+
+    .textarea {
         height: 100px;
         border: 1px;
         background: #1A1E28;
         color: #fff;
-        :deep(.n-input-wrapper){
+
+        :deep(.n-input-wrapper) {
             resize: none;
         }
-        :deep(textarea){
+
+        :deep(textarea) {
             color: #fff;
         }
     }
-    .btn{
+
+    .btn {
         width: 336px;
         height: 40px;
         border-radius: 12px;
@@ -127,14 +144,16 @@ watch(
         line-height: 40px;
         margin-top: 16px;
     }
-    .can{
+
+    .can {
         background: linear-gradient(114.24deg, #FFB524 16.28%, #FF8C39 94.9%);
         color: #222222;
         cursor: pointer;
         font-weight: 700;
-        
+
     }
-    .cant{
+
+    .cant {
         background: #27272A;
         color: #A3A2A2;
         cursor: no-drop;

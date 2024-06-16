@@ -4,6 +4,7 @@ import { GoogleSignInButton, type CredentialResponse } from 'vue3-google-signin'
 import { useRouter } from 'vue-router';
 import { NModal, useMessage, NSpin } from 'naive-ui';
 import { useUserStore } from '@/stores/user';
+import { getHashUrlParams } from '@/utils/common';
 // import { getUrlParams, GenerateKey } from '@/utils/common';
 const { VITE_USER_NODE_ENV } = import.meta.env;
 const userStore = useUserStore();
@@ -17,8 +18,25 @@ watch(
     () => userStore.isPopupLogin,
     () => {
         if (userStore.isPopupLogin) {
+            let path = null;
+            switch (router.currentRoute.value.path) {
+                case '/':
+                    path = '首页';
+                    break;
+                case '/chat':
+                    path = '聊天页';
+                    break;
+                case '/becomePro':
+                    path = '会员页';
+                    break;
+                default:
+                    path = '其他页';
+                    break;
+            }
             sensors.track('h5_login_page_view', {
-                entrance_source: '首页登录',
+                entrance_source: path,
+                from_our_platform: 'ponrh.ai',
+                ref_name: 'pornh.ai:' + getHashUrlParams('ref')
             });
         }
     },
@@ -43,12 +61,16 @@ const googleLogin = () => {
     show.value = true;
     sensors.track('h5_loginpop_click', {
         node_name: 'Google',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
 };
 
 const faceLogin = () => {
     sensors.track('h5_loginpop_click', {
         node_name: 'Facebook',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
     // @ts-ignore
     // eslint-disable-next-line no-undef
@@ -84,7 +106,7 @@ const loginUser = async (): Promise<any> => {
         "apikey": "apikey_47gd4km58q7ef19to",
         "sign": "3BD3B8DA9215FD9DA8339A2FCD7AF3A4",
         bind_source: 1,
-        ref_name: 'testname_01'
+        ref_name: getHashUrlParams('ref')
     };
     const data: any = await userStore.getUserInfo(params);
     show.value = false;
@@ -118,6 +140,8 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
         is_success: is_success,
         fail_reason: fail_reason,
         is_first_log: is_first_log == '' ? false : true,
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
 };
 </script>
@@ -126,29 +150,32 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
     <div class="login">
         <NModal v-model:show="userStore.isPopupLogin" :on-after-leave="handleClick">
             <div>
-                <p color-fff fs-34 font-weight-bold text-center> Welcome Back! </p>
-                <p color-fff fs-24 m-b-20 text-center> Sign in to your account </p>
                 <NSpin :show="show">
-                    <div w-456 h-286 bg-313255 border-radius-22 center>
+                    <div w-384 p-x-24 bg-1A1E28 p-y-30 border-radius-22 center position-relative>
+                        <img src="@/assets/images/close_icon.svg" position-absolute r-15 c-p t-15 square-24
+                            class="close" @click="handleClick" />
                         <div>
-                            <p w-350 h-50 bg-ffffff border-radius-12 m-b-20 fs-15 color-333333 center c-p
-                                position-relative @click="googleLogin">
+                            <p color-fff fs-24 font-weight-bold> Welcome Back! </p>
+                            <p color-fff fs-14 m-b-20 color-A1A1AA> Sign in to your account </p>
+                            <p h-40 bg-ffffff border-radius-12 m-b-20 fs-15 color-333333 center c-p position-relative
+                                @click="googleLogin">
                                 <img square-22 m-r-12 src="@/assets/images/google.webp" />Sign in with Google
                                 <GoogleSignInButton position-absolute left-80 top-5 h-100p op0 w-100p
                                     @success="handleLoginSuccess" @error="handleLoginError" />
                             </p>
-                            <p w-350 h-50 bg-ffffff border-radius-12 m-b-20 fs-15 color-333333 center c-p
-                                @click="faceLogin">
+                            <p h-40 bg-ffffff border-radius-12 m-b-20 fs-15 color-333333 center c-p @click="faceLogin">
                                 <img square-22 m-r-12 src="@/assets/images/facebook.webp" />Sign in with Facebook
                             </p>
-                            <p v-if="VITE_USER_NODE_ENV == 'dev'" w-350 h-50 bg-ffffff border-radius-12 m-b-20 fs-15
+                            <p v-if="VITE_USER_NODE_ENV == 'dev'" h-40 bg-ffffff border-radius-12 m-b-20 fs-15
                                 color-333333 center c-p @click="loginUser"> 模拟登陆1 </p>
-                            <p w-329 color-coolGray fs-13 len-18 text-center>
+                            <p color-ffffff fs-14 text-center m-b-12>Don't have an account？<span c-p color-8C80FF>Sign
+                                    up</span></p>
+                            <p color-coolGray fs-12 len-18 text-center>
                                 By continuing，you agree to our <a
                                     href="https://cdn-mate.matelink.com/web/agreement-en.html" target="_blank"
-                                    color-8C80FF>User Agreement</a> and
-                                <a href="https://cdn-mate.matelink.com/web/service-en.html" target="_blank"
-                                    color-8C80FF>Privacy Policy</a>
+                                    color-8C80FF style="border-bottom: 1px solid #8C80FF;">User Agreement</a> and
+                                <a href="https://cdn-mate.matelink.com/web/service-en.html" target="_blank" color-8C80FF
+                                    style="border-bottom: 1px solid #8C80FF;">Privacy Policy</a>
                             </p>
                         </div>
                     </div>

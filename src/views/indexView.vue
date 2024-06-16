@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/user';
 import { useHomeStore } from '@/stores/home';
 import { useChatStore } from '@/stores/chat';
 import { useRouter } from 'vue-router';
-import { getUrlParams } from '@/utils/common';
+import { getUrlParams, getHashUrlParams } from '@/utils/common';
 import { getBanner } from '@/api/home/index';
 const router = useRouter();
 const userStore = useUserStore();
@@ -17,46 +17,69 @@ const sensors = app?.appContext.config.globalProperties.$sensors;
 const bannerInfo = ref({} as any);
 const _getBanner = async () => {
     const params = {
-        channel_name: 'likaixuantest'
+        channel_name: getHashUrlParams('ref')
     };
     const data: any = await getBanner(params);
     if (data.code === 200) {
         bannerInfo.value = data.data;
     }
 };
-const toDetails = (item: any) => {
+const toDetails = (item: any, type: number) => {
     //记录当前滚动条位置
-    if (!userStore.Token) {
-        userStore.isPopupLogin = true;
-    } else if (item) {
-        ChatStore.setAiInfo(item);
-        sensors.track('h5_AI_node_click', {
-            node_name: 'AI聊天',
-            ai_name: item.name,
-            ai_id: item.ai_uid,
+    // if (!userStore.Token) {
+    //     userStore.isPopupLogin = true;
+    // } else if (item) {
+    if (type == 1) {
+        sensors.track('h5_banner_click', {
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
         });
         sensors.track('h5_chat_page_view', {
-            entrance_source: '首页',
+            entrance_source: 'banner',
             ai_name: item.name,
             ai_id: item.ai_uid,
+            is_login: userStore.Token ? '是' : '否',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
         });
-        setTimeout(() => {
-            router.push(`/chat`);
-            sensors.track('h5_AI_node_click', {
-                node_name: 'AI详情',
-                ai_name: item.name,
-                ai_id: item.ai_uid,
-            });
-        }, 300);
+    } else {
+        sensors.track('h5_chat_page_view', {
+            entrance_source: '角色',
+            ai_name: item.name,
+            ai_id: item.ai_uid,
+            is_login: userStore.Token ? '是' : '否',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
     }
+    ChatStore.setAiInfo(item);
+    sensors.track('h5_AI_node_click', {
+        node_name: 'AI聊天',
+        ai_name: item.name,
+        ai_id: item.ai_uid,
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    setTimeout(() => {
+        router.push(`/chat`);
+        sensors.track('h5_AI_node_click', {
+            node_name: 'AI详情',
+            ai_name: item.name,
+            ai_id: item.ai_uid,
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+    }, 300);
+    // }
 };
 const gotoDevin = () => {
     const devin = homeStore.list.find((item: any) => item.ai_uid === 'ai_user_f9f55d887c3c453ebf4b00f7');
     if (!devin) return;
-    toDetails(devin);
+    toDetails(devin, 2);
 };
 
 onMounted(() => {
+    console.log(getHashUrlParams('ref'), 'getHashUrlParams')
     _getBanner()
     if (homeStore.list.length < 1) {
         homeStore.getList();
@@ -64,7 +87,10 @@ onMounted(() => {
     if (getUrlParams('type')) {
         userStore.payType = true;
     }
-    sensors.track('h5_homepage_view', {});
+    sensors.track('h5_homepage_view', {
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
     var scrollPosition = localStorage.getItem('scrollPosition');
     setTimeout(() => {
         if (scrollPosition) {
@@ -123,14 +149,16 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
             <source :src="audioUrl" type="audio/mpeg" />
         </audio>
         <div max-w-1380 m-a>
-            <img v-if="router.currentRoute.value.query.to === 'devinai'" src="@/assets/images/banner_devin.webp" w-100p
-                m-b-40 @click="gotoDevin()" />
-            <img v-else :src="bannerInfo.banner_url" w-100p m-b-40 c-p class="banner" @click="toDetails(bannerInfo)" />
-            <div d-grid justify-content-space-between style="grid-template-columns: repeat(auto-fill, 262px)" class="listBox">
+            <img v-if="!getHashUrlParams('ref')" src="@/assets/images/banner.png" w-100p m-b-40 c-p class="banner"
+                @click="gotoDevin()" />
+            <img v-else :src="bannerInfo.banner_url" w-100p m-b-40 c-p class="banner"
+                @click="toDetails(bannerInfo, 1)" />
+            <div d-grid justify-content-space-between style="grid-template-columns: repeat(auto-fill, 262px)"
+                class="listBox">
                 <div v-for="item in homeStore.list" :key="item.name">
                     <div :class="[item.enterShow ? 'animate__pulse__diy' : '', item.leaveShow ? 'animate__subse__diy' : '', 'boxplus']"
                         @mouseenter="onMouseenter(item)" @mouseleave="onMouseleave(item)" transition-ease-in-out w-262
-                        h-420 border-radius-20 overflow-hidden position-relative m-b-18 c-p @click="toDetails(item)">
+                        h-420 border-radius-20 overflow-hidden position-relative m-b-18 c-p @click="toDetails(item, 2)">
                         <div position-absolute w-76 h-34 r-18 t-18 fs-14 center color-fff class="chat"> Chat <img m-l-3
                                 square-12 src="@/assets/images/fly.webp" /> </div>
                         <!-- 视频 -->
@@ -151,6 +179,9 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                             <div flex-flex-start-center>
                                 <p v-for="t in item.tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 class="tab_bg">
                                     {{ t }}
+                                </p>
+                                <p v-for="t in item.common_tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 class="tab_bg">
+                                    {{ t.tag_name }}
                                 </p>
                             </div>
                         </div>
@@ -182,7 +213,8 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
 
 .main {
     scroll-behavior: smooth;
-    .banner{
+
+    .banner {
         height: 418px;
     }
 }
@@ -301,18 +333,22 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
         object-fit: cover;
     }
 }
-@media screen and (max-width: 768px){
-    .main{
+
+@media screen and (max-width: 768px) {
+    .main {
         padding: 0.05rem 0.08rem;
-        .banner{
+
+        .banner {
             width: 100%;
             height: 1.72rem;
             margin-bottom: 0.08rem;
         }
-        .listBox{
+
+        .listBox {
             grid-template-columns: repeat(auto-fill, 1.83rem) !important;
         }
-        .boxplus{
+
+        .boxplus {
             width: 1.83rem;
             height: 2.93rem;
         }

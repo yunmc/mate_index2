@@ -5,6 +5,7 @@ const router = useRouter();
 import { useChatStore } from '@/stores/chat';
 import { getCurrentInstance, watch } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { getHashUrlParams } from '@/utils/common';
 const userStore = useUserStore();
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
@@ -19,32 +20,62 @@ watch(
         if (ChatStore.aiInfo) {
             if (ChatStore.aiInfo.name) {
                 sensors.track('h5_chat_page_view', {
-                    entrance_source: 'AI详情页',
+                    entrance_source: '消息列表',
                     ai_name: ChatStore.aiInfo.name,
                     ai_id: ChatStore.aiInfo.ai_uid,
+                    is_login: userStore.Token ? '是' : '否',
+                    from_our_platform: 'ponrh.ai',
+                    ref_name: 'pornh.ai:' + getHashUrlParams('ref')
                 });
             }
         }
     },
     { immediate: true }
 );
-
+const chatBurialPoint = (name: string) => {
+    sensors.track('h5_AI_function_click', {
+        node_name: name,
+        ai_name: ChatStore.aiInfo.name,
+        entrance_source:'消息列表',
+        ai_id: ChatStore.aiInfo.ai_uid,
+        is_login: userStore.Token ? '是' : '否',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+};
 
 const showPhoto = (): void => {
     ChatStore.isPopupPhoto = true;
+    sensors.track('h5_AI_function_click', {
+        node_name: '相册',
+        ai_name: ChatStore.aiInfo.name,
+        entrance_source:'消息列表',
+        ai_id: ChatStore.aiInfo.ai_uid,
+        is_login: userStore.Token ? '是' : '否',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+};
+const toBecomePro = () => {
+    sensors.track('h5_pro_page_view', {
+        entrance_source:'海报图',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    router.push('/becomePro');
 };
 </script>
 
 <template>
     <div class="banner" v-if="ChatStore.aiInfo">
         <img src="@/assets/images/prev_icon.svg" class="prevM" @click="prevM" />
-        <div class="mask" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="router.push('/becomePro')">
+        <div class="mask" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="toBecomePro">
             <div class="btn" v-if="userStore.userInfo?.vip_info.vip_type == 0">Pro Unlock</div>
         </div>
         <NCarousel show-arrow v-if="ChatStore.aiInfo.posters">
-            <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item" />
+            <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item" @click="chatBurialPoint('海报图')" />
             <template #arrow="{ prev, next }">
-                <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center>
+                <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center @click="chatBurialPoint('切换海报图')">
                     <img square-34 m-l-12 c-p class="prev" @click="prev" src="@/assets/images/arrow.webp" />
                     <img square-34 m-r-12 c-p class="next" @click="next" src="@/assets/images/arrow.webp" />
                 </div>
@@ -69,7 +100,8 @@ const showPhoto = (): void => {
 
             <div class="tag" flex-flex-start-center flex-wrap>
                 <span v-for="item in ChatStore.aiInfo.tags" :key="item" fs-12 p-x-12 p-y-6>{{ item }}</span>
-                <span v-for="item in ChatStore.aiInfo.common_tags" :key="item" fs-12 p-x-12 p-y-6>{{ item.tag_name }}</span>
+                <span v-for="item in ChatStore.aiInfo.common_tags" :key="item" fs-12 p-x-12 p-y-6>{{ item.tag_name
+                    }}</span>
             </div>
             <div color-fff fs-24 line-height-32>introduce</div>
             <div class="introduce" m-t-10 fs-14 line-height-24>
@@ -84,7 +116,8 @@ const showPhoto = (): void => {
 <style lang="less" scoped>
 .banner {
     height: calc(100vh - 280px);
-    .prevM{
+
+    .prevM {
         display: none;
     }
 
@@ -168,10 +201,10 @@ const showPhoto = (): void => {
     top: 50%;
     left: 0;
     width: 100%;
-    z-index: 2;
 
     .next {
         transform: scaleX(-1) scaleY(-1);
+        z-index: 20;
 
         &:hover {
             opacity: 0.5;
@@ -180,6 +213,8 @@ const showPhoto = (): void => {
 
 
     .prev {
+        z-index: 20;
+
         &:hover {
             opacity: 0.5;
         }
@@ -191,6 +226,7 @@ const showPhoto = (): void => {
     left: 0;
     bottom: 80px;
     width: 100%;
+    z-index: 20;
 
     li {
         width: 8px;
@@ -208,9 +244,10 @@ const showPhoto = (): void => {
         background: rgba(255, 255, 255, 1);
     }
 }
-@media screen and (max-width: 768px){
-    .banner{
-        .prevM{
+
+@media screen and (max-width: 768px) {
+    .banner {
+        .prevM {
             display: block;
             position: absolute;
             top: 0.14rem;

@@ -15,7 +15,11 @@ export const useUserStore = defineStore({
     }),
     actions: {
         logOut() {
+            const consentValue = localStorage.getItem('consent');
             window.localStorage.clear();
+            if (consentValue !== null) {
+                localStorage.setItem('consent', consentValue);
+            }
             window.location.reload();
         },
         getUser() {

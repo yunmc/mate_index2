@@ -1,15 +1,22 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { getHashUrlParams } from '@/utils/common';
 let isConsent = ref(localStorage.getItem('consent'));
 const userStore = useUserStore();
+const app = getCurrentInstance();
+const sensors = app?.appContext.config.globalProperties.$sensors;
 const Consent = () => {
+    sensors.track('h5_homepage_click', {
+        node_name: '满18岁确认',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
     localStorage.setItem('consent', 'true');
     isConsent.value = 'true';
-    popupLogin();
-};
-const popupLogin = (): void => {
-    userStore.isPopupLogin = true;
+    if (!userStore.Token) {
+        userStore.isPopupLogin = true;
+    }
 };
 </script>
 

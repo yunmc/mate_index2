@@ -27,3 +27,11 @@ export const sendSelfie = (params: any) => {
 export const getPhotoList = (params: any) => {
     return http.post(`/chat/chat/collection`, params);
 };
+
+export const verifySend = (params: any) => {
+    return http.post(`/chat/chat/before_send_msg`, params);
+};
+
+export const getMsgPlayer = (params: any) => {
+    return http.post(`chat/chat/msg_transform_audio`, params);
+};

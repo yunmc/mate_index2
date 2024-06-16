@@ -20,7 +20,7 @@ const changePosition = (position: number) => {
 };
 onMounted(async () => {
     if (userStore.Token != '') {
-        // await ChatStore.getInitChat();
+        await ChatStore.getInitChat();
         await ChatStore.getInitIm();
         ChatStore.chatIm = await new TencentIM({
             sdkAppId: ChatStore.sdkAppId,

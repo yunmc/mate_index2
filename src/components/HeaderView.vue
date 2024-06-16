@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { inject,getCurrentInstance,onMounted } from 'vue';
+import { inject, getCurrentInstance, onMounted } from 'vue';
+import type { Ref } from 'vue';
 import PopupProfile from '../components/popup/proFile.vue';
 import Login from '../components/login/index.vue';
 import { useMessage } from 'naive-ui';
 import { useUserStore } from '@/stores/user';
 import { useOneTap, type CredentialResponse } from "vue3-google-signin";
+import { getHashUrlParams } from '@/utils/common';
 
 const message = useMessage();
 const app = getCurrentInstance();
@@ -12,12 +14,12 @@ const useStore = useUserStore();
 const sensors = app?.appContext.config.globalProperties.$sensors;
 const isMobile = app?.appContext.config.globalProperties.$isMobile;
 const { isReady, login } = useOneTap({
-  disableAutomaticPrompt: true,
-  onSuccess: (response: CredentialResponse) => {
-    googleLogin(response, 'google', 'Google');
-  },
-  onError: () => console.error("Error with One Tap Login"),
-  // options
+    disableAutomaticPrompt: true,
+    onSuccess: (response: CredentialResponse) => {
+        googleLogin(response, 'google', 'Google');
+    },
+    onError: () => console.error("Error with One Tap Login"),
+    // options
 });
 const userStore = useUserStore();
 
@@ -41,12 +43,66 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
         is_success: is_success,
         fail_reason: fail_reason,
         is_first_log: is_first_log == '' ? false : true,
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
 };
-const popupLogin = (): void => {
+const popupLogin = (type: number): void => {
     userStore.isPopupLogin = true;
+    if (type == 1) {
+        sensors.track('h5_homepage_click', {
+            node_name: '注册',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+    } else {
+        sensors.track('h5_homepage_click', {
+            node_name: '登录',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+    }
 };
-const isClicked = inject('isClicked')
+const isClicked = inject('isClicked') as Ref<boolean> | undefined;
+const changeIsClicked = () => {
+    isClicked.value = !isClicked.value
+    if (isClicked.value) {
+        sensors.track('h5_homepage_click', {
+            node_name: '频道收起',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+    }else{
+        sensors.track('h5_homepage_click', {
+            node_name: '频道展开',
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+    }
+}
+const headBurialPoint = () => {
+    sensors.track('h5_homepage_click', {
+        node_name: '个人头像',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+}
+const profileBurialPoint = () => {
+    sensors.track('h5_homepage_click', {
+        node_name: 'profile',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    userStore.isPopupInfo = true
+}
+const logOutBurialPoint = () => {
+    sensors.track('h5_homepage_click', {
+        node_name: '退出',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    userStore.logOut()
+}
 onMounted(() => {
     useStore.getUser()
 });
@@ -55,20 +111,21 @@ onMounted(() => {
 <template>
     <header h-64 bg-131313 class="header">
         <div h-64 flex-between-center style="width: 100%;">
-            <img src="@/assets/images/siler_icon.svg" square-48 m-r-24 c-p @click="isClicked = !isClicked" class="siler_icon" />
+            <img src="@/assets/images/siler_icon.svg" square-48 m-r-24 c-p @click="changeIsClicked"
+                class="siler_icon" />
             <RouterLink to="/">
-                <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img square-40 m-r-12
-                        src="@/assets/images/logo.webp" /> MateLink </div>
+                <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img
+                        square-40 m-r-12 src="@/assets/images/logo.webp" /> MateLink </div>
             </RouterLink>
             <div v-if="!userStore.Token" flex-end-center class="userBox">
                 <span w-90 h-32 color="#FFFFFF" center border-FFB524 bg-FFB524 border-solid border-1 border-radius-8
-                    fs-14 m-r-8 c-p @click="popupLogin">Register</span>
+                    fs-14 m-r-8 c-p @click="popupLogin(1)">Register</span>
                 <span w-90 h-32 color="#FFB524" center border-1 border-solid border-FFB524 border-radius-8 fs-14 c-p
-                    @click="popupLogin" @mouseenter="() => login()">Login</span>
+                    @click="popupLogin(2)" @mouseenter="() => login()">Login</span>
             </div>
             <div class="userBox" v-else>
                 <div class="user" h-60 color-ffffff fs-15 flex-end-center c-p position-relative>
-                    <div :class="userStore.userInfo?.vip_info.vip_type != 0 ? 'avatarBox vipBg' : 'avatarBox bg'">
+                    <div :class="userStore.userInfo?.vip_info.vip_type != 0 ? 'avatarBox vipBg' : 'avatarBox bg'" @mouseenter="headBurialPoint">
                         <img src="@/assets/images/avatar.svg" class="avatar" />
                         <span class="vip_info">{{ userStore.userInfo?.vip_info.vip_type == 0 ? 'Free' :
                             userStore.userInfo?.vip_info.vip_type == 1 ? 'M Pro' : 'Y Pro' }}</span>
@@ -77,11 +134,11 @@ onMounted(() => {
                         userStore.userInfo.user_account }} -->
                     <img square-15 m-l-5 src="@/assets/images/arrow_button.webp" />
                     <div class="person" w-130 position-absolute bg-232325 top-60 z-10 border-radius-12>
-                        <p fs-14 center c-p @click="userStore.isPopupInfo = true">
+                        <p fs-14 center c-p @click="profileBurialPoint">
                             <img src="@/assets/images/user_icon.svg" />
                             <span>Profile</span>
                         </p>
-                        <p fs-14 center c-p @click="userStore.logOut()">
+                        <p fs-14 center c-p @click="logOutBurialPoint">
                             <img src="@/assets/images/signOut_icon.svg" />
                             <span>Sign Out</span>
                         </p>
@@ -113,9 +170,11 @@ onMounted(() => {
     align-items: center;
     padding: 0 32px;
     box-sizing: border-box;
-    .userBox{
+
+    .userBox {
         margin-left: auto;
     }
+
     .user {
         .avatarBox {
             width: 92px;
@@ -181,22 +240,26 @@ onMounted(() => {
 
     }
 }
+
 @media screen and (max-width: 768px) {
     .header {
         padding: 0.11rem 0.05rem;
         border: none;
-        .siler_icon{
+
+        .siler_icon {
             margin-right: 0;
         }
-        .bannerBox{
+
+        .bannerBox {
             font-size: 0.2rem;
-            img{
+
+            img {
                 width: 0.24rem;
                 height: 0.24rem;
                 margin-right: 0.05rem;
             }
         }
     }
-    
+
 }
 </style>

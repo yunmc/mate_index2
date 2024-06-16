@@ -1,15 +1,28 @@
 <script lang="ts" setup>
-import { nextTick, onMounted } from 'vue';
+import { nextTick, onMounted,getCurrentInstance } from 'vue';
 import { NImage, useMessage } from 'naive-ui';
 import { useChatStore } from '@/stores/chat';
+import { useUserStore } from '@/stores/user';
+import { getHashUrlParams } from '@/utils/common';
 import delAi from '../popup/delAi.vue';
+const app = getCurrentInstance();
+const sensors = app?.appContext.config.globalProperties.$sensors;
 
+const userStore = useUserStore();
 const emit = defineEmits(['changePosition']);
 const ChatStore = useChatStore();
 const useMsg = useMessage();
 const setAiUser = async (item: any) => {
-    
-    emit('changePosition',100)
+    sensors.track('h5_AI_function_click', {
+        entrance_source: '切换AI角色',
+        ai_name: ChatStore.aiInfo.name,
+        ai_id: ChatStore.aiInfo.ai_uid,
+        entrance_source: '消息列表',
+        is_login: userStore.Token ? '是' : '否',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    emit('changePosition', 100)
     ChatStore.chatList = [];
     ChatStore.isSend = 0;
     ChatStore.isScroll = true;
@@ -73,7 +86,8 @@ const offset = [-15, 5] as const;
                         <span fs-10>{{ item.lastMessage.lastTime }}</span>
                     </p>
                     <p line-height-18 flex-between-center>
-                        <span class="overflow" fs-12>{{ item.lastMessage.content }}</span>
+                        <span class="overflow" fs-12>{{ typeof item.lastMessage.content == 'string' ?
+                            item.lastMessage.content : item.lastMessage.content.content }}</span>
                         <span v-if="item.userProfile.userID != ChatStore.aiInfo.ai_uid"
                             @click.stop="deleteConver(item, index)"><img square-12 border-radius-50p
                                 src="@/assets/images/delete.webp" /></span>

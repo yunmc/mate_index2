@@ -3,7 +3,8 @@ import { NModal } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import { useChatStore } from '@/stores/chat';
 import { useUserStore } from '@/stores/user';
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance, watch } from 'vue';
+import { getHashUrlParams } from '@/utils/common';
 
 const app = getCurrentInstance();
 const router = useRouter();
@@ -11,16 +12,51 @@ const sensors = app?.appContext.config.globalProperties.$sensors;
 const userStore = useUserStore();
 const ChatStore = useChatStore();
 
+watch(
+    () => userStore.isPopupInfo,
+    () => {
+        if (userStore.isPopupInfo) {
+            sensors.track('h5_user_profile_view', {
+                from_our_platform: 'ponrh.ai',
+                ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+            });
+        }
+    },
+    { immediate: true }
+);
 const handleClick = () => {
     userStore.isPopupInfo = false;
 };
 
 const toLink = (name: any) => {
-    sensors.track('h5_my_node_click', {
+    sensors.track('h5_user_profile_click', {
         node_name: name,
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
 };
+const logOut = () => {
+    sensors.track('h5_user_profile_click', {
+        node_name: '退出',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    userStore.logOut();
+    userStore.isPopupInfo = false;
+    router.push('/');
+};
 const toBecomePro = () => {
+    sensors.track('h5_user_profile_click', {
+        node_name: '升级',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+
+    sensors.track('h5_pro_page_view', {
+        entrance_source: '个人页弹窗',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
     userStore.isPopupInfo = false;
     router.push('/becomePro');
 };
@@ -45,7 +81,7 @@ const toBecomePro = () => {
                             style="background: #FCCA00;border-radius: 8px;height: 32px;padding: 0 20px;line-height: 32px;margin-right: 20px">
                             Change Plan</p>
                     </div>
-                    <a href="https://cdn-mate.matelink.com/web/agreement-en.html" @click="toLink('uer terms')"
+                    <a href="https://cdn-mate.matelink.com/web/agreement-en.html" @click="toLink('User terms')"
                         target="_blank">
                         <div flex-between-center p-y-10 c-p>
                             <p color-ffffff fs-12 flex-start-center> <img square-15 m-r-6
@@ -53,7 +89,7 @@ const toBecomePro = () => {
                             <img square-15 src="@/assets/images/arrow-right.webp" />
                         </div>
                     </a>
-                    <a href="https://cdn-mate.matelink.com/web/service-en.html" @click="toLink('privacy terms')"
+                    <a href="https://cdn-mate.matelink.com/web/service-en.html" @click="toLink('Privacy terms ')"
                         target="_blank">
                         <div flex-between-center p-y-10 c-p>
                             <p color-ffffff fs-12 flex-start-center> <img square-15 m-r-6
@@ -71,7 +107,7 @@ const toBecomePro = () => {
                 </div>
 
                 <div class="out" m-t-20 text-center>
-                    <span c-p @click="userStore.logOut()">Sign out</span>
+                    <span c-p @click="logOut">Sign out</span>
                 </div>
             </div>
         </NModal>

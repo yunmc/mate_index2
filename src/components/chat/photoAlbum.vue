@@ -2,10 +2,16 @@
 import { ref, getCurrentInstance, watch } from 'vue';
 import { NModal, useMessage, NSpin, NImage } from 'naive-ui';
 import { getPhotoList } from '@/api/chat/index';
+import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import { getHashUrlParams } from '@/utils/common';
+const router = useRouter();
+const userStore = useUserStore();
 const show = ref(false);
 const message = useMessage();
 const app = getCurrentInstance();
 const isMobile = app?.appContext.config.globalProperties.$isMobile;
+const sensors = app?.appContext.config.globalProperties.$sensors;
 
 
 import { useChatStore } from '@/stores/chat';
@@ -15,7 +21,6 @@ const handleClick = () => {
     ChatStore.isPopupPhoto = false;
 };
 const prev = () => {
-    console.log(1)
     ChatStore.isPopupPhoto = false;
 };
 const photoList = ref([]);
@@ -29,11 +34,22 @@ const _getPhotoList = async () => {
     const res: any = await getPhotoList(param);
     photoList.value = res.data;
 };
+const jump = () => {
+    if (userStore.userInfo?.vip_info.vip_type == 0) {
+        router.push('/becomePro');
+        ChatStore.isPopupPhoto = false;
+    }
+};
 watch(
     () => ChatStore.isPopupPhoto,
     () => {
         if (ChatStore.isPopupPhoto) {
             _getPhotoList();
+            sensors.track('h5_gallery_view', {
+                photo_num: photoList.value.length,
+                from_our_platform: 'ponrh.ai',
+                ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+            });
         }
     },
     { immediate: true }
@@ -51,7 +67,11 @@ watch(
                     <div class="cont" v-if="photoList.length > 0">
                         <n-image-group show-toolbar-tooltip>
                             <n-space class="picBox">
-                                <n-image v-for="(item, i) in photoList" width="100%" :src="item.pic_url" />
+                                <div v-for="(item, i) in photoList" class="nImageBox">
+                                    <n-image width="100%" :src="item.pic_url" @click="jump" />
+                                    <div class="btn" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="jump">Pro
+                                    </div>
+                                </div>
                                 <i></i>
                                 <i></i>
                             </n-space>
@@ -116,6 +136,28 @@ watch(
             box-sizing: border-box;
             justify-content: space-between;
 
+            .nImageBox {
+                position: relative;
+
+                .btn {
+                    position: absolute;
+                    top: 46%;
+                    left: 50%;
+                    width: 100%;
+                    margin-left: -90px;
+                    width: 180px;
+                    height: 60px;
+                    border-radius: 60px;
+                    border: 1px solid #FFAD28;
+                    text-align: center;
+                    font-size: 28px;
+                    cursor: pointer;
+                    color: #FFA635;
+                    line-height: 56px;
+                    background: rgba(0, 0, 0, 0.2);
+                }
+            }
+
             :deep(.n-image) {
                 width: 308px;
                 height: 520px;
@@ -127,7 +169,8 @@ watch(
                     width: 100%;
                 }
             }
-            i{
+
+            i {
                 width: 308px;
             }
         }
@@ -185,7 +228,8 @@ watch(
                         width: 100%;
                     }
                 }
-                i{
+
+                i {
                     width: 1.72rem;
                 }
             }

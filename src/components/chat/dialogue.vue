@@ -2,10 +2,12 @@
 import { ref, nextTick, watch, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-import { NConfigProvider, NImage, NInput, useMessage, NSpin, NScrollbar } from 'naive-ui';
+import { NConfigProvider, NImage, NInput, useMessage, NSpin, NScrollbar, NModal } from 'naive-ui';
 import { useChatStore } from '@/stores/chat';
 import { randomRange } from '@/utils/common';
 import { useUserStore } from '@/stores/user';
+import { verifySend, getMsgPlayer } from '@/api/chat';
+import { getHashUrlParams } from '@/utils/common';
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
 const userStore = useUserStore();
@@ -20,27 +22,58 @@ const next = () => {
 const prev = () => {
     emit('changePosition', 0);
 };
-const openApp = (name: string) => {
-    if (name != '') {
-        sensors.track('h5_AI_function_click', {
-            node_name: name,
-            ai_name: ChatStore.aiInfo.name,
-            ai_id: ChatStore.aiInfo.ai_uid,
+const openApp = async (item: any) => {
+
+    sensors.track('h5_AI_function_click', {
+        node_name: '语音消息',
+        ai_name: ChatStore.aiInfo.name,
+        entrance_source: '消息列表',
+        ai_id: ChatStore.aiInfo.ai_uid,
+        is_login: userStore.Token ? '是' : '否',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    // if (name != '') {
+    //     sensors.track('h5_AI_function_click', {
+    //         node_name: name,
+    //         ai_name: ChatStore.aiInfo.name,
+    //         ai_id: ChatStore.aiInfo.ai_uid,
+    //     });
+    //     sensors.track('h5_download_pop', {
+    //         entrance_source: name,
+    //     });
+    // } else {
+    //     sensors.track('h5_AI_chat_msg_voice', {
+    //         ai_name: ChatStore.aiInfo.name,
+    //         ai_id: ChatStore.aiInfo.ai_uid,
+    //     });
+    //     sensors.track('h5_download_pop', {
+    //         entrance_source: 'chat',
+    //     });
+    // }
+    // if (name != 'Selfie') {
+    //     ChatStore.isPopupDl = true;
+    // }
+    if (userStore.userInfo?.vip_info.vip_type == 0) {
+        sensors.track('h5_voice_pop_view', {
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
         });
-        sensors.track('h5_download_pop', {
-            entrance_source: name,
-        });
+        // router.push('/becomePro');
+        voiceDialog.value = true;
     } else {
-        sensors.track('h5_AI_chat_msg_voice', {
-            ai_name: ChatStore.aiInfo.name,
-            ai_id: ChatStore.aiInfo.ai_uid,
-        });
-        sensors.track('h5_download_pop', {
-            entrance_source: 'chat',
-        });
-    }
-    if (name != 'Selfie') {
-        ChatStore.isPopupDl = true;
+
+        const params = {
+            msg_id: item.content.data.extra.messageId
+        };
+        const data: any = await getMsgPlayer(params);
+        // data.data.url = 'https://cdn-mate.flyai.com/results/cd28fc18cc25753d2a748fc5bc5cbdfb.mp3'
+        if (data.code == 200) {
+            const audio = new Audio(data.data.url);
+            audio.play();
+        } else {
+            useMsg.error(data.msg);
+        }
     }
 };
 watch(
@@ -58,6 +91,26 @@ watch(
 const loadRequest = ref(false);
 const loadSend = ref(false);
 const sendMessage = async () => {
+    const params = {
+        ai_uid: ChatStore.aiInfo.ai_uid
+    };
+    const data: any = await verifySend(params);
+    // data.data.wake_up_in = 0
+    // userStore.userInfo.vip_info.vip_type = 1
+    if (data.data.wake_up_in > 0) {
+        if(userStore.userInfo.vip_info.vip_type == 0){
+            sensors.track('h5_msg_pro_limit', {
+                from_our_platform: 'ponrh.ai',
+                ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+            });
+        }
+        interdictDialog.value = true;
+        sensors.track('h5_msg_limit_view', {
+            from_our_platform: 'ponrh.ai',
+            ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+        });
+        return;
+    }
     if (message.value != '' && ChatStore.isSend == 0) {
         loadSend.value = true;
         const params = {
@@ -178,9 +231,80 @@ const darkThemeOverrides = {
         primaryColorHover: '#8650D0',
     },
 };
+const chatBurialPoint = (name: string) => {
+    sensors.track('h5_AI_function_click', {
+        node_name: name,
+        ai_name: ChatStore.aiInfo.name,
+        entrance_source: '消息列表',
+        ai_id: ChatStore.aiInfo.ai_uid,
+        is_login: userStore.Token ? '是' : '否',
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+};
+
+
+const interdictDialog = ref(false);
+const voiceDialog = ref(false);
+const handleClick = () => {
+    interdictDialog.value = false;
+    voiceDialog.value = false;
+};
+const jump = () => {
+    sensors.track('h5_msg_limit_click', {
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    sensors.track('h5_pro_page_view', {
+        from_our_platform: 'ponrh.ai',
+        entrance_source: '消息上限弹窗',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    router.push('/becomePro');
+};
+const toBecomePro = () => {
+
+    sensors.track('h5_pro_page_view', {
+        from_our_platform: 'ponrh.ai',
+        entrance_source: '语音弹窗',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    sensors.track('h5_voice_pop_click', {
+        from_our_platform: 'ponrh.ai',
+        ref_name: 'pornh.ai:' + getHashUrlParams('ref')
+    });
+    router.push('/becomePro');
+};
 </script>
 
 <template>
+    <NModal v-model:show="voiceDialog" :on-after-leave="handleClick">
+        <div class="interdictDialog">
+            <img src="@/assets/images/interdictDialogBg.png" />
+            <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
+            <div class="cont">
+                <p class="title">Upgrade to unlock Character Voice Messages</p>
+                <p class="desc">Hurry up, Upgrade Pro now to listen to your character’s voices</p>
+                <p class="btn" @click="toBecomePro">Get voice messages</p>
+            </div>
+        </div>
+    </NModal>
+    <NModal v-model:show="interdictDialog" :on-after-leave="handleClick">
+        <div class="interdictDialog">
+            <img src="@/assets/images/interdictDialogBg.png" />
+            <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
+            <div class="cont" v-if="userStore.userInfo?.vip_info.vip_type == 0">
+                <p class="title">You ran out of messages</p>
+                <p class="desc">Looks like you've ran out of messages. Upgrade Pro now to get more messages!</p>
+                <p class="btn" @click="jump">Get more messages</p>
+            </div>
+            <div class="cont" v-else>
+                <p class="title">There are 1000 messages/day. The limit has been reached today. Please come back
+                    tomorrow.</p>
+                <p class="btn" @click="handleClick">Confirm</p>
+            </div>
+        </div>
+    </NModal>
     <div h-100p position-absolute w-100p>
         <div class="top" h-80 font-weight-bold fs-20 color-ffffff flex-flex-start-center position-absolute z-10
             bg-131313 w-100p left-0 top-0>
@@ -202,7 +326,8 @@ const darkThemeOverrides = {
                                     item.content.data.extra.data.context }}</span>
                                 <span v-else>{{ item.content.data.extra.data.audioContext }}</span>
                                 <img class="video" square-32 v-if="item.content.data.extra.dataType == 'audio'"
-                                    @click="openApp('')" src="@/assets/images/voice.svg" />
+                                    @click="openApp(item)" src="@/assets/images/voice.svg" />
+                                <!-- {{item.content.data.extra}} -->
                             </div>
                             <!-- <p class="icon" v-if="item.content.data.extra.data.is_like">
                                 <img c-p v-if="item.content.data.extra.data.is_like == 'dislike'" src="@/assets/images/chat_icon_2.webp" />
@@ -221,14 +346,16 @@ const darkThemeOverrides = {
                             <div v-else>
                                 <NImage class="nimage" width="150" height="230"
                                     v-if="item.content.data.extra.data.pay_url"
-                                    :src="item.content.data.extra.data.pay_url" />
+                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')" />
                                 <NImage class="nimage" width="150" height="230" preview-disabled v-else
                                     :src="item.content.data.extra.data.url" />
-                                <div class="buy" v-if="!item.content.data.extra.data.is_unlock"
+                                <!-- !item.content.data.extra.data.is_unlock -->
+                                <div class="buy" v-if="userStore.userInfo?.vip_info.vip_type == 0"
                                     @click.stop="router.push('/becomePro')">
                                     <!-- unlockImage(item, index) -->
                                     <div center>
-                                        <p class="dithering" center style="padding: 0 30px; color: #FF9C31;border: 1px solid #FF9C31;">
+                                        <p class="dithering" center
+                                            style="padding: 0 30px; color: #FF9C31;border: 1px solid #FF9C31;">
                                             Pro
                                             <!-- {{ item.content.data.extra.data.price }}
                                             <img square-18 m-l-3 src="@/assets/images/coin.webp" />  -->
@@ -309,17 +436,80 @@ const darkThemeOverrides = {
 }
 </style>
 <style lang="less" scoped>
+.interdictDialog {
+    width: 384px;
+    background: linear-gradient(180deg, rgba(9, 9, 11, 0) 3.29%, #1A1E28 22.14%);
+    border-radius: 16px;
+    position: relative;
+
+    .close {
+        position: absolute;
+        right: 15px;
+        top: 200px;
+        cursor: pointer;
+    }
+
+    .cont {
+        padding: 0 24px;
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 28px;
+            text-align: left;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .desc {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: #A1A1AA;
+        }
+
+        .btn {
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: linear-gradient(114.24deg, #FFB524 16.28%, #FF8C39 94.9%);
+            text-align: center;
+            line-height: 40px;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 30px 0 48px 0;
+
+        }
+    }
+}
+
 @keyframes dithering {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  50% { transform: translateX(10px); }
-  75% { transform: translateX(-10px); }
-  100% { transform: translateX(0); }
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+
+    75% {
+        transform: translateX(-10px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
+
 .dithering {
-    
-  animation: dithering 0.5s ease-in-out;
+
+    animation: dithering 0.5s ease-in-out;
 }
+
 .textarea {
     width: 100%;
     background: rgba(74, 81, 105, 0.5);
@@ -453,7 +643,8 @@ const darkThemeOverrides = {
 
 .top {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    .prev{
+
+    .prev {
         display: none;
     }
 }
@@ -476,13 +667,15 @@ const darkThemeOverrides = {
 .send_message {
     margin-top: -24px;
 }
+
 @media screen and (max-width: 768px) {
-   .top{
-    height: 0.58rem;
-    background: #2A2A2A;
-    .prev{
-        display: block;
+    .top {
+        height: 0.58rem;
+        background: #2A2A2A;
+
+        .prev {
+            display: block;
+        }
     }
-   }
 }
 </style>

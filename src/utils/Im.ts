@@ -139,6 +139,7 @@ class TencentIM {
         messageList.forEach((message: any) => {
             if (message.type === TencentCloudChat.TYPES.MSG_CUSTOM) {
                 ChatStore.originalData.push(message);
+                this.getConversationList();
                 this.setList(message);
             }
         });
@@ -193,12 +194,24 @@ class TencentIM {
                     return false;
                 }
                 console.log('遍历数据', element.content.data, index);
-                element.content.data = JSON.parse(element.content.data);
+                if (typeof element.content.data === 'string') {
+                    // 如果是字符串，尝试解析它
+                    try {
+                        element.content.data = JSON.parse(element.content.data);
+                    } catch (e) {
+                        console.error('解析 JSON 出错:', e);
+                    }
+                } else {
+                    // 如果已经是对象，直接使用
+                    element.content.data = element.content.data;
+                }
+                // element.content.data = JSON.parse(element.content.data);
                 if (element.content.data.extra == undefined) {
                     return false;
                 }
 
                 if (element.content.data.extra.dataType == 'text' || element.content.data.extra.dataType == 'audio' || element.content.data.extra.dataType == 'image') {
+                    
                     element.content.data.is_ai_reply = true;
                     element.to = item.to;
                     if (getTimeDifference(item.time) != '') {
@@ -214,6 +227,7 @@ class TencentIM {
             });
         } catch (error) {
             // window.location.reload();
+            console.log(error, 'error');
         }
     }
 

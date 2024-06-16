@@ -104,3 +104,11 @@ export function getUrlParams(name: any) {
     if (r != null) return unescape(r[2]);
     return null;
 }
+
+export function getHashUrlParams(paramName: any) {
+    const url = window.location.href;
+    const hashParts = url.split('#');
+    if (hashParts.length < 2) return null; // 没有哈希部分
+    const queries = new URLSearchParams(hashParts[1].split('?')[1]);
+    return queries.get(paramName) || '';
+}
