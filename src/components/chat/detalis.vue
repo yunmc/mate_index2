@@ -72,7 +72,7 @@ const toBecomePro = () => {
         <div class="mask" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="toBecomePro">
             <div class="btn" v-if="userStore.userInfo?.vip_info.vip_type == 0">Pro Unlock</div>
         </div>
-        <NCarousel show-arrow v-if="ChatStore.aiInfo.posters">
+        <NCarousel autoplay :interval="5000" show-arrow v-if="ChatStore.aiInfo.posters">
             <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item" @click="chatBurialPoint('海报图')" />
             <template #arrow="{ prev, next }">
                 <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center @click="chatBurialPoint('切换海报图')">

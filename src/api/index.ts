@@ -5,6 +5,7 @@ import { ResultEnum } from '@/enums/httpEnum';
 import { checkStatus } from './helper/checkStatus';
 import router from '@/router';
 import { GenerateKey } from '@/utils/common';
+import { senSorsInit } from '@/utils/sensors';
 // const { VITE_API_URL } = import.meta.env;
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     noLoading?: boolean;
@@ -32,6 +33,8 @@ class RequestHttp {
          */
         this.service.interceptors.request.use(
             (config: CustomAxiosRequestConfig) => {
+                const properties = senSorsInit().getPresetProperties();
+                delete properties.identities;
                 config.data = Object.assign({}, config.data, GenerateKey());
                 config.headers!['x-client'] = 'h5-2';
                 config.headers!['X-Version'] = '1.2.5';

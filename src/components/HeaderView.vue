@@ -50,6 +50,7 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
 const popupLogin = (type: number): void => {
     userStore.isPopupLogin = true;
     if (type == 1) {
+        userStore.popupLoginTitle = 'Sign up';
         sensors.track('h5_homepage_click', {
             node_name: '注册',
             from_our_platform: 'ponrh.ai',
@@ -104,7 +105,9 @@ const logOutBurialPoint = () => {
     userStore.logOut()
 }
 onMounted(() => {
-    useStore.getUser()
+    if(useStore.Token){
+        useStore.getUser()
+    }
 });
 </script>
 

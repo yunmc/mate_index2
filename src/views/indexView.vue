@@ -104,7 +104,7 @@ const handleScroll = (event: any) => {
     const scrollTop = event.target.scrollTop;
     const clientHeight = event.target.clientHeight;
     localStorage.setItem('scrollPosition', event.target.scrollTop);
-    if (scrollTop + clientHeight >= scrollHeight) {
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
         if (!homeStore.loading && !homeStore.finish) {
             homeStore.page++;
             homeStore.getList();
@@ -176,11 +176,11 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                             <div fs-12 len-16 m-b-10 class="moment">
                                 {{ item.ai_desc ? item.ai_desc : item.introduce }}
                             </div>
-                            <div flex-flex-start-center>
-                                <p v-for="t in item.tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 class="tab_bg">
+                            <div flex-flex-start-center flex-wrap>
+                                <p v-for="t in item.tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 m-t-4 class="tab_bg">
                                     {{ t }}
                                 </p>
-                                <p v-for="t in item.common_tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 class="tab_bg">
+                                <p v-for="t in item.common_tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 m-t-4 class="tab_bg">
                                     {{ t.tag_name }}
                                 </p>
                             </div>

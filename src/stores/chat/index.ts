@@ -78,7 +78,23 @@ export const useChatStore = defineStore({
         setAiInfo(item: any) {
             this.aiInfo = '';
             setTimeout(() => {
-                this.aiInfo = item;
+                if (!item.ai_name){
+                    const params = {
+                        ai_uid: item.ai_uid,
+                    };
+                    return new Promise((resolve, reject) => {
+                        coreInfo(params)
+                            .then((response: any) => {
+                                this.aiInfo = response.data;
+                                resolve(response);
+                            })
+                            .catch((error: any) => {
+                                reject(error);
+                            });
+                    });
+                }else{
+                    this.aiInfo = item;
+                }
             }, 100);
         },
         getChatV3(params: any) {

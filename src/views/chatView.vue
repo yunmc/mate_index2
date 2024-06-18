@@ -14,9 +14,10 @@ import ChatPhotoAlbum from '../components/chat/photoAlbum.vue';
 ChatStore.chatList = [];
 ChatStore.isSend = 0;
 const mainPosition = ref(0);
+const changeStatus = ref(0)
 const changePosition = (position: number) => {
     mainPosition.value = position;
-    console.log(position, 'position')
+    changeStatus.value ++;
 };
 onMounted(async () => {
     if (userStore.Token != '') {
@@ -29,14 +30,18 @@ onMounted(async () => {
         });
     }
 });
-
-watch(
-    () => mainPosition,
-    () => {
-        console.log(mainPosition.value, 'mainPosition')
-    },
-    { immediate: true }
-);
+watch(() => userStore.Token, async() => {
+    if (userStore.Token) {
+        console.log('userStore.Token', userStore.Token);
+        await ChatStore.getInitChat();
+        await ChatStore.getInitIm();
+        ChatStore.chatIm = await new TencentIM({
+            sdkAppId: ChatStore.sdkAppId,
+            userId: userStore.userInfo.uid,
+            userSig: ChatStore.init.userSig,
+        });
+    }
+}, { immediate: true });
 
 </script>
 
@@ -51,7 +56,7 @@ watch(
             <NGi :span="11" class="chatDialogue">
                 <div class="light-green"
                     style="background: #131313; height: 100%; position: relative; overflow: scroll">
-                    <ChatDialogue @changePosition="changePosition" />
+                    <ChatDialogue @changePosition="changePosition" :changeStatus="changeStatus" />
                 </div>
             </NGi>
             <NGi :span="7" class="chatDetalis">

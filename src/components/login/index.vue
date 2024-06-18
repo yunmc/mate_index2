@@ -45,6 +45,7 @@ watch(
 
 const handleClick = () => {
     userStore.isPopupLogin = false;
+    userStore.popupLoginTitle = 'Sign in';
 };
 // handle success event
 const handleLoginSuccess = (response: CredentialResponse) => {
@@ -97,14 +98,14 @@ const faceLogin = () => {
 const loginUser = async (): Promise<any> => {
     show.value = true;
     const params = {
-        "clientId": "742137325913-j6tn2dk96v128bl7ocuf1j633nmkih8r.apps.googleusercontent.com",
-        "client_id": "742137325913-j6tn2dk96v128bl7ocuf1j633nmkih8r.apps.googleusercontent.com",
-        "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjY3NGRiYmE4ZmFlZTY5YWNhZTFiYzFiZTE5MDQ1MzY3OGY0NzI4MDMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3NDIxMzczMjU5MTMtajZ0bjJkazk2djEyOGJsN29jdWYxajYzM25ta2loOHIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3NDIxMzczMjU5MTMtajZ0bjJkazk2djEyOGJsN29jdWYxajYzM25ta2loOHIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTIwNTU5ODIzNTUyODAxNjkyNTQiLCJlbWFpbCI6IjczNzgxNTg3MEBxcS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzE3NTcxNDQ5LCJuYW1lIjoiVW5jbGUgV2FuZyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLb3lZTWRHcXNoQ2ZnMVh6RVFOZlpiWTdxVE4wR0VKWkdXVF9hZm1MMWQ3OXkyS1E9czk2LWMiLCJnaXZlbl9uYW1lIjoiVW5jbGUiLCJmYW1pbHlfbmFtZSI6IldhbmciLCJpYXQiOjE3MTc1NzE3NDksImV4cCI6MTcxNzU3NTM0OSwianRpIjoiNTBiN2NjOWYzZmU3MjFmNWZkNDU4MWRiNjU2ZmIwODExOTRjMDliMSJ9.XNhN3170Ad_Iw3hE-agVTk0-_Y2TzMpKQyS8SyofazasUq0hmKbqfcTGwasA56SUQKxYebtYbZfKylj0CFOoIw5stqpi2ROYUSft6HUoTV6QMISD5McfRfJqqT_jv5jPiWtn6XcA9fsatFLS7ovuxFcwyxO1YZ0Tk4mG2z7OKVs6nXstYd90_h3GxOG0HZUcr2lXOSfjkwjevfWzxVf0dfDm-ahz6C-TEvq_QZ-ZdnuT6nYc6yKD-wq6gKtDHDoUMHFx8mjO_4GuCyMrLn2htXOw1ApvOsppAMrMJLOUetEgKNWwi6IQDnc3M-gWYR6FEdQw2-H6hBojSitYwGMifA",
-        "select_by": "btn",
-        "login_type": "google",
-        "seed": 1717571750783,
-        "apikey": "apikey_47gd4km58q7ef19to",
-        "sign": "3BD3B8DA9215FD9DA8339A2FCD7AF3A4",
+    "clientId": "742137325913-j6tn2dk96v128bl7ocuf1j633nmkih8r.apps.googleusercontent.com",
+    "client_id": "742137325913-j6tn2dk96v128bl7ocuf1j633nmkih8r.apps.googleusercontent.com",
+    "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNkNTgwZjBhZjdhY2U2OThhMGNlZTdmMjMwYmNhNTk0ZGM2ZGJiNTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3NDIxMzczMjU5MTMtajZ0bjJkazk2djEyOGJsN29jdWYxajYzM25ta2loOHIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3NDIxMzczMjU5MTMtajZ0bjJkazk2djEyOGJsN29jdWYxajYzM25ta2loOHIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTIwNTU5ODIzNTUyODAxNjkyNTQiLCJlbWFpbCI6IjczNzgxNTg3MEBxcS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzE4Njc3ODI1LCJuYW1lIjoiVW5jbGUgV2FuZyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLb3lZTWRHcXNoQ2ZnMVh6RVFOZlpiWTdxVE4wR0VKWkdXVF9hZm1MMWQ3OXkyS1E9czk2LWMiLCJnaXZlbl9uYW1lIjoiVW5jbGUiLCJmYW1pbHlfbmFtZSI6IldhbmciLCJpYXQiOjE3MTg2NzgxMjUsImV4cCI6MTcxODY4MTcyNSwianRpIjoiZjI5Y2NmZmJiMjZjY2Y4MmFkZDY5YWIwNDg2NDBlNWNiNzlkZjc0ZCJ9.Y9fTuKc0vBguV2NjSKX-2adLeEw1kfDLNTx2nxJUTQDQ9FXNdm2z2p0aImkduLAlGHY7o3xMahtMwbVtRgLtXGc-cbIBFcoxDVsHqXpDH3FygfX1IbYWoWExjy7f2D7e_hD79a0K1R7b1se25-MkCUSp1ulebhB6EE2BhUK7XZZxDJAa8-gwjNCAWC6e2VVx_z8d8oIoAX0IOolnKdyWSvu_y64CD0TsnP9ijXHI40zCWf22x6imcTGggS_qR3ThzGOLSiz8vhURv9EfMBwIWAqp9a8PPYwoGBWdAbhbVDmDrxe0_vybV1goCs-fGG8mgf2ANrYtC1yE1uL4b0uh1A",
+    "select_by": "btn",
+    "login_type": "google",
+    "seed": 1718678126074,
+    "apikey": "apikey_pxmkbsuy1z08ojnle",
+    "sign": "2CA88AF6E0E04DC6793567FBEADB64A8",
         bind_source: 1,
         ref_name: getHashUrlParams('ref')
     };
@@ -112,7 +113,7 @@ const loginUser = async (): Promise<any> => {
     show.value = false;
     if (data.code === 200) {
         message.success('Login success');
-        router.push(`/`);
+        // router.push(`/`);
     } else {
         message.error(data.msg);
     }
@@ -151,12 +152,12 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
         <NModal v-model:show="userStore.isPopupLogin" :on-after-leave="handleClick">
             <div>
                 <NSpin :show="show">
-                    <div w-384 p-x-24 bg-1A1E28 p-y-30 border-radius-22 center position-relative>
+                    <div w-384 bg-1A1E28 p-y-30 border-radius-22 center position-relative>
                         <img src="@/assets/images/close_icon.svg" position-absolute r-15 c-p t-15 square-24
                             class="close" @click="handleClick" />
                         <div>
                             <p color-fff fs-24 font-weight-bold> Welcome Back! </p>
-                            <p color-fff fs-14 m-b-20 color-A1A1AA> Sign in to your account </p>
+                            <p color-fff fs-14 m-b-20 color-A1A1AA> {{userStore.popupLoginTitle }} to your account </p>
                             <p h-40 bg-ffffff border-radius-12 m-b-20 fs-15 color-333333 center c-p position-relative
                                 @click="googleLogin">
                                 <img square-22 m-r-12 src="@/assets/images/google.webp" />Sign in with Google
@@ -173,7 +174,7 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
                             <p color-coolGray fs-12 len-18 text-center>
                                 By continuing，you agree to our <a
                                     href="https://cdn-mate.matelink.com/web/agreement-en.html" target="_blank"
-                                    color-8C80FF style="border-bottom: 1px solid #8C80FF;">User Agreement</a> and
+                                    color-8C80FF style="border-bottom: 1px solid #8C80FF;">User Agreement</a> and<br>
                                 <a href="https://cdn-mate.matelink.com/web/service-en.html" target="_blank" color-8C80FF
                                     style="border-bottom: 1px solid #8C80FF;">Privacy Policy</a>
                             </p>

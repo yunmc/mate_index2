@@ -22,6 +22,14 @@ const next = () => {
 const prev = () => {
     emit('changePosition', 0);
 };
+const props = defineProps({
+    changeStatus: {
+    type: Number
+  }
+});
+watch(() => props.changeStatus, (newValue) => {
+    message.value = '';
+});
 const openApp = async (item: any) => {
 
     sensors.track('h5_AI_function_click', {

@@ -44,6 +44,8 @@ const deleteConver = (item: any, index: any) => {
 };
 
 onMounted(async () => {
+    console.log('ChatStore.aiInfo.ai_uid', ChatStore.aiInfo.ai_uid);
+    console.log('ChatStore.aiList', ChatStore.aiList);
     nextTick(() => {
         if (!ChatStore.aiInfo.ai_uid && ChatStore.aiList != '') {
             setAiUser(ChatStore.aiList[0]);

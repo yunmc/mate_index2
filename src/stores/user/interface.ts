@@ -6,4 +6,5 @@ export interface UserState {
     Token: string;
     userInfo: any;
     payType: boolean;
+    popupLoginTitle: string;
 }
