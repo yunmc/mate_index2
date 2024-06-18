@@ -25,6 +25,7 @@ export const useChatStore = defineStore({
         isLoadAi: false,
         payToken: '',
         delAiInfo: '',
+        bannerAssign:false
     }),
     actions: {
         getCoreInfo(uid: string) {
@@ -78,22 +79,21 @@ export const useChatStore = defineStore({
         setAiInfo(item: any) {
             this.aiInfo = '';
             setTimeout(() => {
-                if (!item.ai_name){
+                if (!item.ai_name) {
                     const params = {
                         ai_uid: item.ai_uid,
                     };
-                    return new Promise((resolve, reject) => {
-                        coreInfo(params)
-                            .then((response: any) => {
-                                this.aiInfo = response.data;
-                                resolve(response);
-                            })
-                            .catch((error: any) => {
-                                reject(error);
-                            });
-                    });
-                }else{
+                    coreInfo(params)
+                        .then((response: any) => {
+                            console.log('ChatStore.aiInfo.ai_uid', this.aiInfo);
+                            this.aiInfo = response.data;
+                            this.bannerAssign = true;
+                        })
+                        .catch((error: any) => {
+                        });
+                } else {
                     this.aiInfo = item;
+                    this.bannerAssign = true;
                 }
             }, 100);
         },

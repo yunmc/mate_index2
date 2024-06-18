@@ -17,4 +17,5 @@ export interface ChatState {
     isLoadAi: boolean;
     payToken: any;
     delAiInfo: any;
+    bannerAssign: boolean;
 }

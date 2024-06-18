@@ -354,9 +354,9 @@ const toBecomePro = () => {
                             <div v-else>
                                 <NImage class="nimage" width="150" height="230"
                                     v-if="item.content.data.extra.data.pay_url"
-                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')" />
+                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')" :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
                                 <NImage class="nimage" width="150" height="230" preview-disabled v-else
-                                    :src="item.content.data.extra.data.url" />
+                                    :src="item.content.data.extra.data.url" :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
                                 <!-- !item.content.data.extra.data.is_unlock -->
                                 <div class="buy" v-if="userStore.userInfo?.vip_info.vip_type == 0"
                                     @click.stop="router.push('/becomePro')">
