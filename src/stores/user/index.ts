@@ -14,6 +14,7 @@ export const useUserStore = defineStore({
         Token: '',
         userInfo: {},
         payType: false,
+        isAdult: false
     }),
     actions: {
         logOut() {

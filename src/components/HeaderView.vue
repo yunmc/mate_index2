@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { inject, getCurrentInstance, onMounted } from 'vue';
+import { inject, getCurrentInstance, onMounted, watch, ref } from 'vue';
 import type { Ref } from 'vue';
 import PopupProfile from '../components/popup/proFile.vue';
 import Login from '../components/login/index.vue';
@@ -7,6 +7,7 @@ import { useMessage } from 'naive-ui';
 import { useUserStore } from '@/stores/user';
 import { useOneTap, type CredentialResponse } from "vue3-google-signin";
 import { getHashUrlParams } from '@/utils/common';
+
 
 const message = useMessage();
 const app = getCurrentInstance();
@@ -23,6 +24,16 @@ const { isReady, login } = useOneTap({
 });
 const userStore = useUserStore();
 
+watch(
+    () => userStore.isAdult,
+    () => {
+        console.log(userStore.isAdult, 'isAdult')
+        if (userStore.isAdult) {
+            login()
+        }
+    },
+    { deep: true }
+);
 const googleLogin = async (response: any, type: any, platform: any) => {
     const param = response;
     param.login_type = type;
@@ -73,7 +84,7 @@ const changeIsClicked = () => {
             from_our_platform: 'ponrh.ai',
             ref_name: 'pornh.ai:' + getHashUrlParams('ref')
         });
-    }else{
+    } else {
         sensors.track('h5_homepage_click', {
             node_name: '频道展开',
             from_our_platform: 'ponrh.ai',
@@ -105,8 +116,10 @@ const logOutBurialPoint = () => {
     userStore.logOut()
 }
 onMounted(() => {
-    if(useStore.Token){
+    if (useStore.Token) {
         useStore.getUser()
+    } else {
+        login()
     }
 });
 </script>
@@ -117,8 +130,8 @@ onMounted(() => {
             <img src="@/assets/images/siler_icon.svg" square-48 m-r-24 c-p @click="changeIsClicked"
                 class="siler_icon" />
             <RouterLink to="/">
-                <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img
-                        m-r-12 src="@/assets/images/logo.svg" /></div>
+                <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img m-r-12
+                        src="@/assets/images/logo.svg" /></div>
             </RouterLink>
             <div v-if="!userStore.Token" flex-end-center class="userBox">
                 <span w-90 h-32 color="#FFFFFF" center border-FFB524 bg-FFB524 border-solid border-1 border-radius-8
@@ -128,7 +141,8 @@ onMounted(() => {
             </div>
             <div class="userBox" v-else>
                 <div class="user" h-60 color-ffffff fs-15 flex-end-center c-p position-relative>
-                    <div :class="userStore.userInfo?.vip_info.vip_type != 0 ? 'avatarBox vipBg' : 'avatarBox bg'" @mouseenter="headBurialPoint">
+                    <div :class="userStore.userInfo?.vip_info.vip_type != 0 ? 'avatarBox vipBg' : 'avatarBox bg'"
+                        @mouseenter="headBurialPoint">
                         <img src="@/assets/images/avatar.svg" class="avatar" />
                         <span class="vip_info">{{ userStore.userInfo?.vip_info.vip_type == 0 ? 'Free' :
                             userStore.userInfo?.vip_info.vip_type == 1 ? 'M Pro' : 'Y Pro' }}</span>

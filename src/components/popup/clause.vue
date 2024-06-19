@@ -14,6 +14,7 @@ const Consent = () => {
     });
     localStorage.setItem('consent', 'true');
     isConsent.value = 'true';
+    userStore.isAdult = true;
     if (!userStore.Token) {
         userStore.isPopupLogin = true;
     }

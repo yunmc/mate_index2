@@ -35,3 +35,6 @@ export const verifySend = (params: any) => {
 export const getMsgPlayer = (params: any) => {
     return http.post(`chat/chat/msg_transform_audio`, params);
 };
+export const getGreet = () => {
+    return http.post(`/aiUser/core/greeting_corpus`);
+};

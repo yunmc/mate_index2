@@ -7,4 +7,5 @@ export interface UserState {
     userInfo: any;
     payType: boolean;
     popupLoginTitle: string;
+    isAdult: boolean;
 }

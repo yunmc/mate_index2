@@ -71,7 +71,7 @@ const offset = [-15, 5] as const;
 <template>
     <div p-x-12 min-w-250 p-t-33 h-100p overflow-auto flex-column>
         <div color-fff fs-20 font-weight-bold> Chat</div>
-        <!-- <div h-54 m-b-10 flex-flex-start-center c-p
+        <div h-54 m-b-10 flex-flex-start-center c-p
             class="border current" v-if="Object.keys(ChatStore.aiInfo).length !== 0 && !userStore.Token">
             <NImage width="37" height="37" m-x-8 border-radius-50p preview-disabled object-fit="cover"
                 :src="ChatStore.aiInfo.avatar" />
@@ -81,11 +81,11 @@ const offset = [-15, 5] as const;
                     <span fs-10>{{}}</span>
                 </p>
                 <p line-height-18 flex-between-center>
-                    <span class="overflow" fs-12>{{ item.lastMessage.content11111 }}</span>
+                    <!-- <span class="overflow" fs-12>{{ item.lastMessage.content11111 }}</span> -->
                 </p>
             </div>
-        </div> -->
-        <p color-B5B1FF op30 fs-15 v-if="ChatStore.aiList == '' && ChatStore.isAI"> It's empty
+        </div>
+        <p color-B5B1FF op30 fs-15 v-else-if="ChatStore.aiList == '' && ChatStore.isAI"> It's empty
         </p>
 
         <div v-else m-t-13>

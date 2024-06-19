@@ -13,10 +13,10 @@ import TencentIM from '@/utils/Im';
 import ChatPhotoAlbum from '../components/chat/photoAlbum.vue';
 ChatStore.chatList = [];
 ChatStore.isSend = 0;
-const mainPosition = ref(0);
 const changeStatus = ref(0)
+console.log('ChatStore.mainPosition', ChatStore.mainPosition)
 const changePosition = (position: number) => {
-    mainPosition.value = position;
+    ChatStore.mainPosition = position;
     changeStatus.value ++;
 };
 onMounted(async () => {
@@ -32,7 +32,6 @@ onMounted(async () => {
 });
 watch(() => userStore.Token, async() => {
     if (userStore.Token) {
-        console.log('userStore.Token', userStore.Token);
         await ChatStore.getInitChat();
         await ChatStore.getInitIm();
         ChatStore.chatIm = await new TencentIM({
@@ -46,13 +45,26 @@ watch(() => userStore.Token, async() => {
 </script>
 
 <template>
-    <NGrid h-100p overflow-hidden x-gap="0" :cols="24" class="chatGrid" :style="{left:'-'+ mainPosition +'%'}">
+    <NGrid h-100p overflow-hidden x-gap="0" :cols="24" class="chatGrid" :style="{left:'-'+ ChatStore.mainPosition +'%'}">
         <NGi :span="6" style="background: #1A1A1A; height: 100%; position: relative" class="chatPeople">
             <ChatPeople @changePosition="changePosition" />
         </NGi>
 
         <template
             v-if="userStore.Token != '' && (ChatStore.aiList != '' || !ChatStore.isAI) && ChatStore.aiInfo.ai_uid">
+            <NGi :span="11" class="chatDialogue">
+                <div class="light-green"
+                    style="background: #131313; height: 100%; position: relative; overflow: scroll">
+                    <ChatDialogue @changePosition="changePosition" :changeStatus="changeStatus" />
+                </div>
+            </NGi>
+            <NGi :span="7" class="chatDetalis">
+                <div class="light-green" style="background: #18143c; height: 100%; position: relative">
+                    <ChatDetalis @changePosition="changePosition" />
+                </div>
+            </NGi>
+        </template>
+        <template v-else-if="Object.keys(ChatStore.aiInfo).length !== 0 && !userStore.Token">
             <NGi :span="11" class="chatDialogue">
                 <div class="light-green"
                     style="background: #131313; height: 100%; position: relative; overflow: scroll">

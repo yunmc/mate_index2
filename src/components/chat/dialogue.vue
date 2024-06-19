@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { ref, nextTick, watch, getCurrentInstance } from 'vue';
+import { ref, nextTick, watch, getCurrentInstance, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 import { NConfigProvider, NImage, NInput, useMessage, NSpin, NScrollbar, NModal } from 'naive-ui';
 import { useChatStore } from '@/stores/chat';
 import { randomRange } from '@/utils/common';
 import { useUserStore } from '@/stores/user';
-import { verifySend, getMsgPlayer } from '@/api/chat';
+import { verifySend, getMsgPlayer, getGreet } from '@/api/chat';
 import { getHashUrlParams } from '@/utils/common';
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
@@ -30,7 +30,8 @@ const props = defineProps({
 watch(() => props.changeStatus, (newValue) => {
     message.value = '';
 });
-let currentAudio:any = null;
+
+let currentAudio: any = null;
 const openApp = async (item: any) => {
 
     sensors.track('h5_AI_function_click', {
@@ -112,21 +113,25 @@ const openApp = async (item: any) => {
         // }
     }
 };
-watch(
-    () => ChatStore.chatList,
-    () => {
-        if (!ChatStore.isScroll) {
-            return false;
-        }
-        nextTick(() => {
-            handleScrollToPosition();
-        });
-    },
-    { deep: true }
-);
+// watch(
+//     () => ChatStore.chatList,
+//     () => {
+//         if (!ChatStore.isScroll) {
+//             return false;
+//         }
+//         nextTick(() => {
+//             handleScrollToPosition();
+//         });
+//     },
+//     { deep: true }
+// );
 const loadRequest = ref(false);
 const loadSend = ref(false);
 const sendMessage = async () => {
+    if (!userStore.Token) {
+        userStore.isPopupLogin = true;
+        return;
+    }
     const params = {
         ai_uid: ChatStore.aiInfo.ai_uid
     };
@@ -166,6 +171,7 @@ const sendMessage = async () => {
         const response: any = await ChatStore.getChatV3(params);
         loadSend.value = false;
         if (response.code == 200) {
+            console.log('ChatStore.chatList', response);
             ChatStore.chatList.push({
                 content: {
                     data: {
@@ -311,6 +317,54 @@ const toBecomePro = () => {
     });
     router.push('/becomePro');
 };
+onMounted(async () => {
+    if (!userStore.Token) {
+        const data: any = await getGreet();
+        ChatStore.chatList.push({
+            content: {
+                data: {
+                    targetId: ChatStore.aiInfo?.ai_uid,
+                    content: {
+                        //随机从data.data中选取一条
+                        context: data.data[Math.floor((Math.random() * data.data.length))]
+                    },
+                    extra: {
+                        messageId: randomRange(10),
+                        dataType: 'text',
+                        data: {
+                            context: data.data[Math.floor((Math.random() * data.data.length))]
+                        },
+                    },
+                },
+                description: '',
+                extension: '',
+            },
+            to: userStore.userInfo.uid
+        }, {
+            content: {
+                data: {
+                    targetId: ChatStore.aiInfo?.ai_uid,
+                    content: {
+                        content: "[图片]",
+                    },
+                    extra: {
+                        messageId: randomRange(10),
+                        dataType: 'image',
+                        data: {
+                            url: ChatStore.aiInfo.introduce_image,
+                        },
+                    },
+                },
+                description: '',
+                extension: '',
+            },
+            to: userStore.userInfo.uid
+        });
+        console.log("ChatStore.chatList")
+    } else {
+        ChatStore.chatList = ChatStore.chatList.filter((item: any) => item.type == 'TIMCustomElem');
+    }
+});
 </script>
 
 <template>
@@ -329,7 +383,7 @@ const toBecomePro = () => {
         <div class="interdictDialog">
             <img src="@/assets/images/interdictDialogBg.png" />
             <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
-            <div class="cont" v-if="userStore.userInfo?.vip_info.vip_type == 0">
+            <div class="cont" v-if="userStore.userInfo?.vip_info?.vip_type == 0">
                 <p class="title">You ran out of messages</p>
                 <p class="desc">Looks like you've ran out of messages. Upgrade Pro now to get more messages!</p>
                 <p class="btn" @click="jump">Get more messages</p>
@@ -383,13 +437,13 @@ const toBecomePro = () => {
                                 <NImage class="nimage" width="150" height="230"
                                     v-if="item.content.data.extra.data.pay_url"
                                     :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')"
-                                    :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
-                                <NImage class="nimage" width="150" height="230" preview-disabled v-else
+                                    :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
+                                <NImage class="nimage" width="150" height="230" v-else
                                     :src="item.content.data.extra.data.url"
-                                    :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
+                                    :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
                                 <!-- !item.content.data.extra.data.is_unlock -->
-                                <div class="buy" v-if="userStore.userInfo?.vip_info.vip_type == 0"
-                                    @click.stop="router.push('/becomePro')">
+                                <div class="buy" v-if="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token"
+                                    @click.stop="!userStore.Token ? userStore.isPopupLogin = true : router.push('/becomePro')">
                                     <!-- unlockImage(item, index) -->
                                     <div center>
                                         <p class="dithering" center
@@ -707,9 +761,10 @@ const toBecomePro = () => {
 }
 
 @media screen and (max-width: 768px) {
-    .textareaBox{
+    .textareaBox {
         width: 80%;
     }
+
     .top {
         height: 0.58rem;
         background: #2A2A2A;

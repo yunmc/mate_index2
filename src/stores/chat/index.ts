@@ -25,7 +25,8 @@ export const useChatStore = defineStore({
         isLoadAi: false,
         payToken: '',
         delAiInfo: '',
-        bannerAssign:false
+        bannerAssign:false,
+        mainPosition: 0
     }),
     actions: {
         getCoreInfo(uid: string) {

@@ -36,7 +36,7 @@ const chatBurialPoint = (name: string) => {
     sensors.track('h5_AI_function_click', {
         node_name: name,
         ai_name: ChatStore.aiInfo.name,
-        entrance_source:'消息列表',
+        entrance_source: '消息列表',
         ai_id: ChatStore.aiInfo.ai_uid,
         is_login: userStore.Token ? '是' : '否',
         from_our_platform: 'ponrh.ai',
@@ -45,11 +45,17 @@ const chatBurialPoint = (name: string) => {
 };
 
 const showPhoto = (): void => {
-    ChatStore.isPopupPhoto = true;
+    if (userStore.Token) {
+
+        ChatStore.isPopupPhoto = true;
+    } else {
+
+        userStore.isPopupLogin = true;
+    }
     sensors.track('h5_AI_function_click', {
         node_name: '相册',
         ai_name: ChatStore.aiInfo.name,
-        entrance_source:'消息列表',
+        entrance_source: '消息列表',
         ai_id: ChatStore.aiInfo.ai_uid,
         is_login: userStore.Token ? '是' : '否',
         from_our_platform: 'ponrh.ai',
@@ -58,24 +64,30 @@ const showPhoto = (): void => {
 };
 const toBecomePro = () => {
     sensors.track('h5_pro_page_view', {
-        entrance_source:'海报图',
+        entrance_source: '海报图',
         from_our_platform: 'ponrh.ai',
         ref_name: 'pornh.ai:' + getHashUrlParams('ref')
     });
-    router.push('/becomePro');
+    if (userStore.Token) {
+        router.push('/becomePro');
+    } else {
+        userStore.isPopupLogin = true;
+    }
 };
 </script>
 
 <template>
     <div class="banner" v-if="ChatStore.aiInfo">
         <img src="@/assets/images/prev_icon.svg" class="prevM" @click="prevM" />
-        <div class="mask" v-if="userStore.userInfo?.vip_info.vip_type == 0" @click="toBecomePro">
-            <div class="btn" v-if="userStore.userInfo?.vip_info.vip_type == 0">Pro Unlock</div>
+        <div class="mask" v-if="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token" @click="toBecomePro">
+            <div class="btn" v-if="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token">Pro Unlock</div>
         </div>
         <NCarousel autoplay :interval="5000" show-arrow v-if="ChatStore.aiInfo.posters">
-            <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item" @click="chatBurialPoint('海报图')" />
+            <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item"
+                @click="chatBurialPoint('海报图')" />
             <template #arrow="{ prev, next }">
-                <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center @click="chatBurialPoint('切换海报图')">
+                <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center
+                    @click="chatBurialPoint('切换海报图')">
                     <img square-34 m-l-12 c-p class="prev" @click="prev" src="@/assets/images/arrow.webp" />
                     <img square-34 m-r-12 c-p class="next" @click="next" src="@/assets/images/arrow.webp" />
                 </div>

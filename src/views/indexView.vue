@@ -20,8 +20,14 @@ const _getBanner = async () => {
         channel_name: getHashUrlParams('ref')
     };
     const data: any = await getBanner(params);
-    if (data.code === 200) {
+    if (data.code === 200 && data.data.length !== 0) {
         bannerInfo.value = data.data;
+    }else{
+        const url = window.location.href;
+        const index = url.indexOf('?');
+        if (index !== -1) {
+            window.location.href = url.substring(0, index);
+        }
     }
 };
 const toDetails = (item: any, type: number) => {
@@ -52,6 +58,7 @@ const toDetails = (item: any, type: number) => {
             ref_name: 'pornh.ai:' + getHashUrlParams('ref')
         });
     }
+    ChatStore.mainPosition = 100;
     ChatStore.setAiInfo(item);
     sensors.track('h5_AI_node_click', {
         node_name: 'AI聊天',
@@ -79,7 +86,6 @@ const gotoDevin = () => {
 };
 
 onMounted(() => {
-    console.log(getHashUrlParams('ref'), 'getHashUrlParams')
     _getBanner()
     if (homeStore.list.length < 1) {
         homeStore.getList();
@@ -185,6 +191,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                                 </p>
                             </div>
                         </div>
+                        <div position-absolute w-100p left-0 h-100p bottom-0></div>
                     </div>
                 </div>
             </div>
@@ -340,7 +347,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
 
         .banner {
             width: 100%;
-            height: 1.72rem;
+            height: auto;
             margin-bottom: 0.08rem;
         }
         .title{
@@ -359,6 +366,10 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
         .boxplus {
             width: 1.83rem;
             height: 2.93rem;
+        }
+        .c-video-player{
+            width: 100%;
+            height: 100%;
         }
     }
 }

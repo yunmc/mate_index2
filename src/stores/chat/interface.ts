@@ -18,4 +18,5 @@ export interface ChatState {
     payToken: any;
     delAiInfo: any;
     bannerAssign: boolean;
+    mainPosition: number;
 }
