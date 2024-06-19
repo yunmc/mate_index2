@@ -24,12 +24,13 @@ const prev = () => {
 };
 const props = defineProps({
     changeStatus: {
-    type: Number
-  }
+        type: Number
+    }
 });
 watch(() => props.changeStatus, (newValue) => {
     message.value = '';
 });
+let currentAudio:any = null;
 const openApp = async (item: any) => {
 
     sensors.track('h5_AI_function_click', {
@@ -76,12 +77,39 @@ const openApp = async (item: any) => {
         };
         const data: any = await getMsgPlayer(params);
         // data.data.url = 'https://cdn-mate.flyai.com/results/cd28fc18cc25753d2a748fc5bc5cbdfb.mp3'
+        if (currentAudio) {
+            currentAudio.pause();
+            // currentAudio.currentTime = 0; // 重置音频播放时间为0
+        }
         if (data.code == 200) {
-            const audio = new Audio(data.data.url);
-            audio.play();
+            currentAudio = new Audio(data.data.url);
+            currentAudio.play();
+            // 当音频播放结束时，清除currentAudio，允许新的音频播放
+            currentAudio.onended = function () {
+                currentAudio = null;
+            };
         } else {
             useMsg.error(data.msg);
         }
+        // const params = {
+        //     msg_id: item.content.data.extra.messageId
+        // };
+        // const data = await getMsgPlayer(params);
+        // // 如果有音频正在播放，先停止当前音频
+        // if (currentAudio) {
+        //     currentAudio.pause();
+        //     currentAudio.currentTime = 0; // 重置音频播放时间为0
+        // }
+        // if (data.code == 200) {
+        //     currentAudio = new Audio(data.data.url);
+        //     currentAudio.play();
+        //     // 当音频播放结束时，清除currentAudio，允许新的音频播放
+        //     currentAudio.onended = function () {
+        //         currentAudio = null;
+        //     };
+        // } else {
+        //     useMsg.error(data.msg);
+        // }
     }
 };
 watch(
@@ -106,7 +134,7 @@ const sendMessage = async () => {
     // data.data.wake_up_in = 0
     // userStore.userInfo.vip_info.vip_type = 1
     if (data.data.wake_up_in > 0) {
-        if(userStore.userInfo.vip_info.vip_type == 0){
+        if (userStore.userInfo.vip_info.vip_type == 0) {
             sensors.track('h5_msg_pro_limit', {
                 from_our_platform: 'ponrh.ai',
                 ref_name: 'pornh.ai:' + getHashUrlParams('ref')
@@ -354,9 +382,11 @@ const toBecomePro = () => {
                             <div v-else>
                                 <NImage class="nimage" width="150" height="230"
                                     v-if="item.content.data.extra.data.pay_url"
-                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')" :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
+                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')"
+                                    :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
                                 <NImage class="nimage" width="150" height="230" preview-disabled v-else
-                                    :src="item.content.data.extra.data.url" :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
+                                    :src="item.content.data.extra.data.url"
+                                    :style="userStore.userInfo?.vip_info.vip_type == 0 ? 'filter: blur(5px);' : ''" />
                                 <!-- !item.content.data.extra.data.is_unlock -->
                                 <div class="buy" v-if="userStore.userInfo?.vip_info.vip_type == 0"
                                     @click.stop="router.push('/becomePro')">
@@ -405,7 +435,7 @@ const toBecomePro = () => {
             <img v-if="ChatStore.aiInfo.private_date_btn" h-26 m-r-5 c-p src="@/assets/images/fig_icon_4.webp" @click="openApp('Date')" />
         </div> -->
         <div position-relative>
-            <NConfigProvider preflight-style-disabled w-90p>
+            <NConfigProvider preflight-style-disabled w-90p class="textareaBox">
                 <NInput placeholder="Say something…" type="textarea" class="textarea" v-model:value="message" :autosize="{
                     minRows: 1,
                     maxRows: 5,
@@ -677,6 +707,9 @@ const toBecomePro = () => {
 }
 
 @media screen and (max-width: 768px) {
+    .textareaBox{
+        width: 80%;
+    }
     .top {
         height: 0.58rem;
         background: #2A2A2A;

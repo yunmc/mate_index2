@@ -118,7 +118,7 @@ onMounted(() => {
                 class="siler_icon" />
             <RouterLink to="/">
                 <div color="#fff" fs-25 font-italic font-weight-bold flex-left-center c-p class="bannerBox"> <img
-                        square-40 m-r-12 src="@/assets/images/logo.webp" /> MateLink </div>
+                        m-r-12 src="@/assets/images/logo.svg" /></div>
             </RouterLink>
             <div v-if="!userStore.Token" flex-end-center class="userBox">
                 <span w-90 h-32 color="#FFFFFF" center border-FFB524 bg-FFB524 border-solid border-1 border-radius-8
@@ -197,7 +197,7 @@ onMounted(() => {
 
             .vip_info {
                 font-family: DingTalk JinBuTi;
-                font-size: 17px;
+                font-size: 15px;
             }
         }
 
@@ -214,6 +214,7 @@ onMounted(() => {
         .person {
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
+            z-index: 50;
 
             p {
                 text-align: center;
@@ -257,7 +258,7 @@ onMounted(() => {
             font-size: 0.2rem;
 
             img {
-                width: 0.24rem;
+                width: 0.9rem;
                 height: 0.24rem;
                 margin-right: 0.05rem;
             }

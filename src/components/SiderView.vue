@@ -104,6 +104,11 @@ const windowOpen = (node_name:string,url: string) => {
             </p>
         </div>
         <div class="menu-bottom" p-30>
+            <p @click="windowOpen('X','https://x.com/Matelink280248')" flex-flex-start-center h-48 w-100p border-1
+                border-414267 border-solid color-FFFFFF fs-12 border-radius-10 c-p m-b-16
+                :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }">
+                <img src="@/assets/images/Twitter_icon.svg" m-l-12 m-r-10 square-24 />X
+            </p>
             <p @click="windowOpen('Discord','https://discord.gg/txKxnFeBdt')" flex-flex-start-center h-48 w-100p border-1
                 border-414267 border-solid color-FFFFFF fs-12 border-radius-10 c-p m-b-16
                 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }">
@@ -115,11 +120,6 @@ const windowOpen = (node_name:string,url: string) => {
             <p flex-flex-start-center h-48 w-100p border-1 border-414267 border-solid color-FFFFFF fs-12
                 border-radius-10 c-p m-b-16 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }"><img src="@/assets/images/Instagram_icon.svg" m-l-12 m-r-10
                     square-24 />Instagram</p> -->
-            <p @click="windowOpen('X','https://x.com/Matelink280248')" flex-flex-start-center h-48 w-100p border-1
-                border-414267 border-solid color-FFFFFF fs-12 border-radius-10 c-p m-b-16
-                :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }">
-                <img src="@/assets/images/Facebook_icon.svg" m-l-12 m-r-10 square-24 />Facebook
-            </p>
         </div>
     </div>
     <Contact />

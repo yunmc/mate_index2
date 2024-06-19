@@ -65,13 +65,13 @@ const toBecomePro = () => {
 <template>
     <div>
         <NModal v-model:show="userStore.isPopupInfo" :on-after-leave="handleClick">
-            <div w-525 p-b-20 bg-313255 border-radius-20 overflow-hidden>
+            <div w-525 p-b-20 bg-313255 border-radius-20 overflow-hidden class="proFile">
                 <div fs-21 font-weight-bold color-fff center p-t-25>
                     <img square-54 border-radius-50p :src="userStore.userInfo.avatar" />
                 </div>
                 <div fs-14 color-fff center m-t-12> UID: {{ userStore.userInfo.user_account }} </div>
 
-                <div w-425 m-auto m-t-20>
+                <div class="cont" w-425 m-auto m-t-20>
                     <!-- ChatStore.isPopupCoin = true -->
                     <div class="pay" c-p @click="toBecomePro" w-425 h-66 flex-between-center font-weight-bold m-b-20>
                         <p color-fff fs-15 p-l-30>Current Plan {{ userStore.userInfo?.vip_info.vip_type == 0 ? 'Free' :
@@ -134,5 +134,20 @@ const toBecomePro = () => {
 
 .out {
     color: rgba(255, 255, 255, 0.5);
+}
+@media screen and (max-width: 768px){
+    .proFile{
+        width: 95% !important;
+        padding: 0 0.2rem;
+        .cont{
+            width: 100%;
+            .pay{
+                width: 100%;
+            }
+        }
+        .out{
+            margin: 0.2rem 0;
+        }
+    }  
 }
 </style>

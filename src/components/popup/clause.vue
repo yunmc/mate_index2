@@ -92,4 +92,48 @@ const Consent = () => {
         }
     }
 }
+@media screen and (max-width: 768px){
+    
+.clause {
+    min-height: auto;
+    border-radius: 24px 24px 0px 0px;
+    padding: 0 0.35rem;
+
+    .container {
+        width: 100%;
+        display: block;
+
+        img {
+            margin: 0.22rem auto 0.1rem;
+            width: 1.16rem;
+            height: auto;
+            display: block;
+        }
+
+        .cont {
+            margin-right: 0;
+
+            .title {
+                font-size: 0.18rem;
+                margin-bottom: 0.18rem;
+                text-align: center;
+            }
+
+            .textCont {
+                font-size: 0.11rem;
+                line-height: 0.15rem;
+            }
+        }
+
+        .btn {
+            width: 1.87rem;
+            height: 0.48rem;
+            border-radius: 0.24rem;
+            font-size: 0.2rem;
+            line-height: 0.48rem;
+            margin: 0.2rem auto;
+        }
+    }
+}
+}
 </style>

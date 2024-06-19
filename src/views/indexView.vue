@@ -170,7 +170,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                             object-fit="cover" :src="item.introduce_image" />
                         <div class="bg" position-absolute w-100p left-0 p-b-16 bottom-0 p-x-15 color-ffffff>
                             <img class="play" w-62 src="@/assets/images/paly.webp" />
-                            <div fs-21 font-weight-bold m-b-12 line-height-20>
+                            <div fs-21 font-weight-bold m-b-12 line-height-20 class="title">
                                 {{ item.name }}
                             </div>
                             <div fs-12 len-16 m-b-10 class="moment">
@@ -342,6 +342,14 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
             width: 100%;
             height: 1.72rem;
             margin-bottom: 0.08rem;
+        }
+        .title{
+            font-size: 0.15rem;
+            margin-bottom: 0.07rem;
+        }
+        .moment{
+            font-size: 0.1rem;
+            line-height: 0.12rem;
         }
 
         .listBox {
