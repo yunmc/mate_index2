@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, provide,watch } from 'vue';
+import { onMounted, ref, provide, watch } from 'vue';
 import { NGi, NGrid, NSpin } from 'naive-ui';
 import { useChatStore } from '@/stores/chat';
 import { useUserStore } from '@/stores/user';
@@ -17,7 +17,7 @@ const changeStatus = ref(0)
 console.log('ChatStore.mainPosition', ChatStore.mainPosition)
 const changePosition = (position: number) => {
     ChatStore.mainPosition = position;
-    changeStatus.value ++;
+    changeStatus.value++;
 };
 onMounted(async () => {
     if (userStore.Token != '') {
@@ -30,7 +30,7 @@ onMounted(async () => {
         });
     }
 });
-watch(() => userStore.Token, async() => {
+watch(() => userStore.Token, async () => {
     if (userStore.Token) {
         await ChatStore.getInitChat();
         await ChatStore.getInitIm();
@@ -40,12 +40,13 @@ watch(() => userStore.Token, async() => {
             userSig: ChatStore.init.userSig,
         });
     }
-}, { immediate: true });
+}, { immediate: false });
 
 </script>
 
 <template>
-    <NGrid h-100p overflow-hidden x-gap="0" :cols="24" class="chatGrid" :style="{left:'-'+ ChatStore.mainPosition +'%'}">
+    <NGrid h-100p overflow-hidden x-gap="0" :cols="24" class="chatGrid"
+        :style="{ left: '-' + ChatStore.mainPosition + '%' }">
         <NGi :span="6" style="background: #1A1A1A; height: 100%; position: relative" class="chatPeople">
             <ChatPeople @changePosition="changePosition" />
         </NGi>

@@ -113,18 +113,41 @@ const openApp = async (item: any) => {
         // }
     }
 };
-// watch(
-//     () => ChatStore.chatList,
-//     () => {
-//         if (!ChatStore.isScroll) {
-//             return false;
-//         }
-//         nextTick(() => {
-//             handleScrollToPosition();
-//         });
-//     },
-//     { deep: true }
-// );
+watch(
+    () => ChatStore.chatList,
+    () => {
+        // const filteredList = ChatStore.chatList.filter((item: any, index: any, self: any) => {
+        //     return self.findIndex((t: any) => t.content.data.extra.messageId === item.content.data.extra.messageId) === index;
+        // });
+
+        // if (JSON.stringify(filteredList) !== JSON.stringify(ChatStore.chatList)) {
+        //     ChatStore.chatList = filteredList;
+        // }
+
+        const messageIdSet = new Set();
+        const filteredList = ChatStore.chatList.filter((item: any) => {
+            const messageId = item.content.data.extra.messageId;
+            if (messageIdSet.has(messageId)) {
+                return false;
+            } else {
+                messageIdSet.add(messageId);
+                return true;
+            }
+        });
+
+        if (filteredList.length !== ChatStore.chatList.length || !filteredList.every((item:any, index:any) => item.content.data.extra.messageId === ChatStore.chatList[index].content.data.extra.messageId)) {
+            ChatStore.chatList = filteredList;
+        }
+
+        if (!ChatStore.isScroll) {
+            return false;
+        }
+        nextTick(() => {
+            handleScrollToPosition();
+        });
+    },
+    { deep: true }
+);
 const loadRequest = ref(false);
 const loadSend = ref(false);
 const sendMessage = async () => {
@@ -317,6 +340,14 @@ const toBecomePro = () => {
     });
     router.push('/becomePro');
 };
+const NInputBlur = () => {
+    iskey.value = false;
+    let u = navigator.userAgent;
+    let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    if (isiOS) {
+        window.scrollBy(0, 0);
+    }
+};
 onMounted(async () => {
     if (!userStore.Token) {
         const data: any = await getGreet();
@@ -365,6 +396,7 @@ onMounted(async () => {
         ChatStore.chatList = ChatStore.chatList.filter((item: any) => item.type == 'TIMCustomElem');
     }
 });
+
 </script>
 
 <template>
@@ -435,10 +467,12 @@ onMounted(async () => {
                             </div>
                             <div v-else>
                                 <NImage class="nimage" width="150" height="230"
+                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0"
                                     v-if="item.content.data.extra.data.pay_url"
                                     :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')"
                                     :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
                                 <NImage class="nimage" width="150" height="230" v-else
+                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0"
                                     :src="item.content.data.extra.data.url"
                                     :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
                                 <!-- !item.content.data.extra.data.is_unlock -->
@@ -493,7 +527,7 @@ onMounted(async () => {
                 <NInput placeholder="Say something…" type="textarea" class="textarea" v-model:value="message" :autosize="{
                     minRows: 1,
                     maxRows: 5,
-                }" :theme-overrides="darkThemeOverrides" @blur="iskey = false" @focus="iskey = true"
+                }" :theme-overrides="darkThemeOverrides" @blur="NInputBlur" @focus="iskey = true"
                     onkeydown="if(event.keyCode==13)return false;" />
             </NConfigProvider>
             <n-spin v-if="loadSend" class="send_message" square-48 position-absolute r-10 top-50p size="small" />

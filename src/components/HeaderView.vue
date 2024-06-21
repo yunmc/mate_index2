@@ -119,7 +119,6 @@ onMounted(() => {
     if (useStore.Token) {
         useStore.getUser()
     } else {
-        login()
     }
 });
 </script>

@@ -13,6 +13,7 @@ const homeStore = useHomeStore();
 const ChatStore = useChatStore();
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
+const isMobile = app?.appContext.config.globalProperties.$isMobile;
 
 const bannerInfo = ref({} as any);
 const _getBanner = async () => {
@@ -20,9 +21,9 @@ const _getBanner = async () => {
         channel_name: getHashUrlParams('ref')
     };
     const data: any = await getBanner(params);
-    if (data.code === 200 && data.data.length !== 0) {
+    if (data.code === 200 && data.data.length !== 0 && data.data.channel_url) {
         bannerInfo.value = data.data;
-    }else{
+    } else {
         const url = window.location.href;
         const index = url.indexOf('?');
         if (index !== -1) {
@@ -86,6 +87,9 @@ const gotoDevin = () => {
 };
 
 onMounted(() => {
+    if (getHashUrlParams('ref')) {
+        sensors.setProfile({ from_our_platform: 'ponrh.ai', ref_name: 'pornh.ai:' + getHashUrlParams('ref') });
+    }
     _getBanner()
     if (homeStore.list.length < 1) {
         homeStore.getList();
@@ -120,7 +124,9 @@ const handleScroll = (event: any) => {
 const audio = ref();
 const audioUrl = ref('https://cdn-mate.matelink.com/audio/source/audio_cf355ab59d2044d9bbf91e348a.mp3');
 const onMouseenter = (item: any) => {
-    // console.log('11111111');
+    if (isMobile) {
+        return;
+    }
     item.enterShow = true;
     item.leaveShow = false;
     audioUrl.value = item.voice_introduct;
@@ -131,9 +137,13 @@ const onMouseenter = (item: any) => {
     if (video$ref.value[`video#${item.name}`]) {
         const $video = video$ref.value[`video#${item.name}`];
         // @todo：mouseenter 事件仍然会提示需要用户交互才能进行播放。
+
     }
 };
 const onMouseleave = (item: any) => {
+    if (isMobile) {
+        return;
+    }
     item.enterShow = false;
     item.leaveShow = true;
     if (audio.value.play) {
@@ -154,7 +164,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
         <audio control ref="audio" loop>
             <source :src="audioUrl" type="audio/mpeg" />
         </audio>
-        <div max-w-1380 m-a>
+        <div max-w-1380 m-a class="mainBox">
             <img v-if="!getHashUrlParams('ref')" src="@/assets/images/banner.png" w-100p m-b-40 c-p class="banner"
                 @click="gotoDevin()" />
             <img v-else :src="bannerInfo.banner_url" w-100p m-b-40 c-p class="banner"
@@ -170,10 +180,10 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                         <!-- 视频 -->
                         <video-player v-if="item.introduce_video" class="c-video-player" :ref="e => handle$ref(e, item)"
                             :width="262" :height="420" :src="item.introduce_video" :poster="item.introduce_video_cover"
-                            :autoplay="true" :muted="true" :loop="true" />
+                            :autoplay="true" :muted="true" :loop="true" playsinline preload="auto" />
                         <!-- 图片 -->
-                        <NImage v-else-if="item.introduce_image" width="262" height="420" preview-disabled
-                            object-fit="cover" :src="item.introduce_image" />
+                        <NImage v-else-if="item.introduce_image" class="nImage" width="262" height="420"
+                            preview-disabled object-fit="cover" :src="item.introduce_image" />
                         <div class="bg" position-absolute w-100p left-0 p-b-16 bottom-0 p-x-15 color-ffffff>
                             <img class="play" w-62 src="@/assets/images/paly.webp" />
                             <div fs-21 font-weight-bold m-b-12 line-height-20 class="title">
@@ -186,7 +196,8 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
                                 <p v-for="t in item.tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 m-t-4 class="tab_bg">
                                     {{ t }}
                                 </p>
-                                <p v-for="t in item.common_tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 m-t-4 class="tab_bg">
+                                <p v-for="t in item.common_tags" :key="t" p-x-8 p-y-4 fs-10 center m-r-4 m-t-4
+                                    class="tab_bg">
                                     {{ t.tag_name }}
                                 </p>
                             </div>
@@ -228,6 +239,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
 
 .boxplus {
     border: solid 1px #FFB524;
+    overflow: hidden;
 
     .chat {
         background: linear-gradient(113deg, #8d2cff 7%, #ee2f5d 50%, #ff27d0 100%);
@@ -341,6 +353,14 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
     }
 }
 
+@media screen and (max-width: 1439px) {
+    .main {
+        .mainBox {
+            max-width: 1100px;
+        }
+    }
+}
+
 @media screen and (max-width: 768px) {
     .main {
         padding: 0.05rem 0.08rem;
@@ -350,11 +370,13 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
             height: auto;
             margin-bottom: 0.08rem;
         }
-        .title{
+
+        .title {
             font-size: 0.15rem;
             margin-bottom: 0.07rem;
         }
-        .moment{
+
+        .moment {
             font-size: 0.1rem;
             line-height: 0.12rem;
         }
@@ -366,8 +388,15 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
         .boxplus {
             width: 1.83rem;
             height: 2.93rem;
+
+            .nImage {}
+
+            :deep(.n-image img) {
+                width: 100%;
+            }
         }
-        .c-video-player{
+
+        .c-video-player {
             width: 100%;
             height: 100%;
         }
