@@ -67,7 +67,8 @@ const toBecomePro = () => {
         <NModal v-model:show="userStore.isPopupInfo" :on-after-leave="handleClick">
             <div w-384 p-b-20 bg-1A1E28 border-radius-20 p-x-22 overflow-hidden class="proFile">
                 <div fs-21 font-weight-bold color-fff center p-t-25>
-                    <img square-54 border-radius-50p :src="userStore.userInfo.avatar" />
+                    <!-- :src="userStore.userInfo.avatar" -->
+                    <img square-54 border-radius-50p src="@/assets/images/avatar.svg"  />
                 </div>
                 <div fs-14 color-fff center m-t-12> UID: {{ userStore.userInfo.user_account }}</div>
 

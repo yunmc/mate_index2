@@ -88,7 +88,7 @@ const offset = [-15, 5] as const;
         <p color-B5B1FF op30 fs-15 v-else-if="ChatStore.aiList == '' && ChatStore.isAI"> It's empty
         </p>
 
-        <div v-else m-t-13>
+        <div v-else m-t-13 class="peopleBox">
             <div v-if="!ChatStore.isAI" h-54 m-b-10 flex-flex-start-center c-p
                 :class="!ChatStore.isAI ? 'border current' : 'border'">
                 <NImage width="37" height="37" m-x-8 border-radius-50p preview-disabled object-fit="cover"
@@ -151,4 +151,20 @@ const offset = [-15, 5] as const;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.peopleBox{
+    max-height: 800px;
+    overflow: auto
+}
+//修改滚动条样式
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #2E323E;
+}
+//滚动条拖动条
+::-webkit-scrollbar-thumb {
+    background-color: #C1C1C1;
+    border-radius: 10px;
+}
+
 </style>

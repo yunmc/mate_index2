@@ -135,7 +135,7 @@ watch(
             }
         });
 
-        if (filteredList.length !== ChatStore.chatList.length || !filteredList.every((item:any, index:any) => item.content.data.extra.messageId === ChatStore.chatList[index].content.data.extra.messageId)) {
+        if (filteredList.length !== ChatStore.chatList.length || !filteredList.every((item: any, index: any) => item.content.data.extra.messageId === ChatStore.chatList[index].content.data.extra.messageId)) {
             ChatStore.chatList = filteredList;
         }
 
@@ -234,11 +234,11 @@ const sendMessage = async () => {
     }
 };
 
-const unlockImage = async (item: any, index: any) => {
-    loadRequest.value = true;
+const unlockImage = async (item: any, index: any, msgId: any, picId: any) => {
+    // loadRequest.value = true;
     ChatStore.isScroll = false;
     const response: any = await ChatStore.getUnlockImage(item, index);
-    loadRequest.value = false;
+    // loadRequest.value = false;
     if (response.code != 200) {
         if (response.code == 1011) {
             //余额不足
@@ -348,6 +348,9 @@ const NInputBlur = () => {
         window.scrollBy(0, 0);
     }
 };
+const showPopupLogin = () => {
+    userStore.isPopupLogin = true;
+};
 onMounted(async () => {
     if (!userStore.Token) {
         const data: any = await getGreet();
@@ -449,6 +452,8 @@ onMounted(async () => {
                                 <span v-else>{{ item.content.data.extra.data.audioContext }}</span>
                                 <img class="video" square-32 v-if="item.content.data.extra.dataType == 'audio'"
                                     @click="openApp(item)" src="@/assets/images/voice.svg" />
+                                <img class="video" square-32 v-if="!userStore.Token" @click="showPopupLogin"
+                                    src="@/assets/images/voice.svg" />
                                 <!-- {{item.content.data.extra}} -->
                             </div>
                             <!-- <p class="icon" v-if="item.content.data.extra.data.is_like">
@@ -462,19 +467,18 @@ onMounted(async () => {
                         </div>
                         <div class="imgPrice flex" v-else-if="item.content.data.extra.dataType == 'image'">
                             <div class="coin" v-if="item.content.data.extra.data.price == 0">
-                                <NImage class="nimage" width="150" height="230"
-                                    :src="item.content.data.extra.data.url" />
+                                <NImage class="nimage" width="150" :src="item.content.data.extra.data.url" />
                             </div>
                             <div v-else>
-                                <NImage class="nimage" width="150" height="230"
-                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0"
+                                <NImage class="nimage" width="150"
+                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token"
                                     v-if="item.content.data.extra.data.pay_url"
-                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')"
-                                    :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
-                                <NImage class="nimage" width="150" height="230" v-else
-                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0"
+                                    :src="item.content.data.extra.data.pay_url" @click="chatBurialPoint('消息图')" />
+                                <NImage class="nimage" width="150" v-else :style="!userStore.Token ? 'filter: blur(20px)' : ''"
+                                    :preview-disabled="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token"
                                     :src="item.content.data.extra.data.url"
-                                    :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(5px);' : ''" />
+                                    @click="unlockImage(item, index, item.content.data.extra.messageId, item.content.data.extra.data.picId)" />
+                                
                                 <!-- !item.content.data.extra.data.is_unlock -->
                                 <div class="buy" v-if="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token"
                                     @click.stop="!userStore.Token ? userStore.isPopupLogin = true : router.push('/becomePro')">
@@ -645,6 +649,9 @@ onMounted(async () => {
     line-height: 18px;
     padding: 0 15px;
     min-height: 48px;
+    // :deep(.n-input__placeholder){
+    //     line-height: 32px;
+    // }
 }
 
 .input {

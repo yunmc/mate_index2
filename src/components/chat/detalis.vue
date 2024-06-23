@@ -141,7 +141,7 @@ const toBecomePro = () => {
         left: 0;
         top: 0;
         z-index: 3;
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(40px);
 
         .btn {
 

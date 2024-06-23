@@ -52,7 +52,7 @@ watch(() => userStore.Token, async () => {
         </NGi>
 
         <template
-            v-if="userStore.Token != '' && (ChatStore.aiList != '' || !ChatStore.isAI) && ChatStore.aiInfo.ai_uid">
+            v-if="(userStore.Token != '' && (ChatStore.aiList != '' || !ChatStore.isAI) && ChatStore.aiInfo.ai_uid) || (Object.keys(ChatStore.aiInfo).length !== 0 && !userStore.Token)">
             <NGi :span="11" class="chatDialogue">
                 <div class="light-green"
                     style="background: #131313; height: 100%; position: relative; overflow: scroll">
@@ -65,7 +65,7 @@ watch(() => userStore.Token, async () => {
                 </div>
             </NGi>
         </template>
-        <template v-else-if="Object.keys(ChatStore.aiInfo).length !== 0 && !userStore.Token">
+        <!-- <template v-else-if="">
             <NGi :span="11" class="chatDialogue">
                 <div class="light-green"
                     style="background: #131313; height: 100%; position: relative; overflow: scroll">
@@ -77,7 +77,7 @@ watch(() => userStore.Token, async () => {
                     <ChatDetalis @changePosition="changePosition" />
                 </div>
             </NGi>
-        </template>
+        </template> -->
         <template v-else>
             <NGi :span="18">
                 <ChatNull />

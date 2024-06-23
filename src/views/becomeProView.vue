@@ -76,6 +76,7 @@ const paypal = async () => {
                         </div>
                     </div>
                     <p class="btn" @click="paypal">Subscribe</p>
+                    <img src="@/assets/images/becomeImg.png" class="addImg"/>
                 </div>
             </NSpin>
             <div class="proContRight">
@@ -83,35 +84,31 @@ const paypal = async () => {
                 <div class="benefitsList">
                     <p>
                         <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Get <span class="label">2000</span> <img src="@/assets/images/gold_icon.svg" alt="" />
-                            at
-                            once</span>
+                        <span>1000 Messages / Day</span>
                     </p>
                     <p>
                         <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Get <span class="label">680</span> <img src="@/assets/images/gold_icon.svg" alt="" />
-                            by
-                            X2 daily bonus</span>
+                        <span>Chat History</span>
                     </p>
                     <p>
                         <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Advanced Pictures Unlocked</span>
+                        <span>Fast response time</span>
                     </p>
                     <p>
-                        <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>All Messages Unblocked</span>
+                        <!-- <img src="@/assets/images/tick_icon.svg" alt="" /> -->
+                        <span>🔥 NSFW</span>
                     </p>
                     <p>
-                        <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Listen to Voice Messages</span>
+                        <!-- <img src="@/assets/images/tick_icon.svg" alt="" /> -->
+                        <span>🌟 Premium Models</span>
                     </p>
                     <p>
-                        <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Intimate Date and Group Chat</span>
+                        <!-- <img src="@/assets/images/tick_icon.svg" alt="" /> -->
+                        <span>📸 Unlimited Photos</span>
                     </p>
                     <p>
-                        <img src="@/assets/images/tick_icon.svg" alt="" />
-                        <span>Remove Ads </span>
+                        <!-- <img src="@/assets/images/tick_icon.svg" alt="" /> -->
+                        <span>🗣︎ Listen to Voice Messages</span>
                     </p>
                 </div>
             </div>
@@ -245,6 +242,11 @@ const paypal = async () => {
                 line-height: 68px;
                 color: #000;
                 cursor: pointer;
+            }
+            .addImg{
+                display: block;
+                margin-top: 47px;
+                margin-left: 65px;
             }
         }
 

@@ -21,7 +21,7 @@ const _getBanner = async () => {
         channel_name: getHashUrlParams('ref')
     };
     const data: any = await getBanner(params);
-    if (data.code === 200 && data.data.length !== 0 && data.data.channel_url) {
+    if (data.code === 200 && data.data.length !== 0) {
         bannerInfo.value = data.data;
     } else {
         const url = window.location.href;

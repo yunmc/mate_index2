@@ -134,7 +134,17 @@ watch(
             color: #fff;
         }
     }
-
+    :deep(.n-input--focus){
+        .n-input__state-border{
+            border-color: #FFB524;
+        }
+    }
+    :deep(.n-input:hover){
+        
+        .n-input__state-border{
+            border-color: #FFB524;
+        }
+    }
     .btn {
         width: 336px;
         height: 40px;

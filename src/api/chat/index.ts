@@ -17,8 +17,11 @@ export const chatLike = (params: any) => {
     return http.post(`chat/chat/like`, params);
 };
 
+// export const unlockImage = (params: any) => {
+//     return http.post(`chat/chat/unlock_image`, params);
+// };
 export const unlockImage = (params: any) => {
-    return http.post(`chat/chat/unlock_image`, params);
+    return http.post(`/chat/chat/pro_unlock_image`, params);
 };
 export const sendSelfie = (params: any) => {
     return http.post(`chat/chat/send_selfie`, params);

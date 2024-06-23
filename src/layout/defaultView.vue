@@ -19,9 +19,9 @@ provide('isClicked', isClicked)
 watch(
     () => route,
     () => {
-        isClicked.value = true;
+        // isClicked.value = true;
     },
-    { immediate: true, deep: true }
+    { deep: true }
 );
 </script>
 
