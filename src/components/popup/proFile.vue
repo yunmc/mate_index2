@@ -90,7 +90,7 @@ const toBecomePro = () => {
                             style="background: #FCCA00;border-radius: 18px;height: 36px;padding: 0 12px;line-height: 36px;margin-right: 24px;font-size: 14px;font-weight: 700;">
                             Upgrade</p>
                     </div>
-                    <a href="https://cdn-mate.matelink.com/web/agreement-en.html" @click="toLink('User terms')"
+                    <a href="https://cdn-mate.matelink.com/image/resource/p_agreement.html" @click="toLink('User terms')"
                         target="_blank">
                         <div flex-between-center p-y-10 c-p>
                             <p color-ffffff fs-12 flex-start-center> <img square-15 m-r-6
@@ -98,7 +98,7 @@ const toBecomePro = () => {
                             <img square-15 src="@/assets/images/arrow-right.webp" />
                         </div>
                     </a>
-                    <a href="https://cdn-mate.matelink.com/web/service-en.html" @click="toLink('Privacy terms ')"
+                    <a href="https://cdn-mate.matelink.com/image/resource/p_policy.html" @click="toLink('Privacy terms ')"
                         target="_blank">
                         <div flex-between-center p-y-10 c-p>
                             <p color-ffffff fs-12 flex-start-center> <img square-15 m-r-6

@@ -405,7 +405,7 @@ onMounted(async () => {
 <template>
     <NModal v-model:show="voiceDialog" :on-after-leave="handleClick">
         <div class="interdictDialog">
-            <img src="@/assets/images/interdictDialogBg.png" />
+            <img src="@/assets/images/interdictDialogBg3.png" />
             <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
             <div class="cont">
                 <p class="title">Upgrade to unlock Character Voice Messages</p>
@@ -416,7 +416,8 @@ onMounted(async () => {
     </NModal>
     <NModal v-model:show="interdictDialog" :on-after-leave="handleClick">
         <div class="interdictDialog">
-            <img src="@/assets/images/interdictDialogBg.png" />
+            <img src="@/assets/images/interdictDialogBg.png" v-if="userStore.userInfo?.vip_info?.vip_type == 0" />
+            <img src="@/assets/images/interdictDialogBg2.png" v-else/>
             <img src="@/assets/images/close_icon.svg" square-24 class="close" @click="handleClick" />
             <div class="cont" v-if="userStore.userInfo?.vip_info?.vip_type == 0">
                 <p class="title">You ran out of messages</p>

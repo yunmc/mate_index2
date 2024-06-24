@@ -100,12 +100,13 @@ const loginUser = async (): Promise<any> => {
     const params = {
         "clientId": "865493212580-9c83sstcubj35jid46s6i9mej6udsct0.apps.googleusercontent.com",
     "client_id": "865493212580-9c83sstcubj35jid46s6i9mej6udsct0.apps.googleusercontent.com",
-    "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNkNTgwZjBhZjdhY2U2OThhMGNlZTdmMjMwYmNhNTk0ZGM2ZGJiNTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4NjU0OTMyMTI1ODAtOWM4M3NzdGN1YmozNWppZDQ2czZpOW1lajZ1ZHNjdDAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4NjU0OTMyMTI1ODAtOWM4M3NzdGN1YmozNWppZDQ2czZpOW1lajZ1ZHNjdDAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTIwNTU5ODIzNTUyODAxNjkyNTQiLCJlbWFpbCI6IjczNzgxNTg3MEBxcS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzE5MTU0NzkyLCJuYW1lIjoiVW5jbGUgV2FuZyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLb3lZTWRHcXNoQ2ZnMVh6RVFOZlpiWTdxVE4wR0VKWkdXVF9hZm1MMWQ3OXkyS1E9czk2LWMiLCJnaXZlbl9uYW1lIjoiVW5jbGUiLCJmYW1pbHlfbmFtZSI6IldhbmciLCJpYXQiOjE3MTkxNTUwOTIsImV4cCI6MTcxOTE1ODY5MiwianRpIjoiODJmYzcxMTkxYTA0NGZiZjJkN2EyN2YyZGIyYTNmNTA5N2U5OTIyMSJ9.BgISlr_iVi0f4Z25No4yFXWLElL4xMbLCqdDxXkeiiNJ4QPeM3smBd_EHvAvkhldNVKPBlbq-S3pWlDiaDx_6Ltaa2eUukSjQL_EWRcqycQOMcLRc4cvj8BlzLwXMunVcodRd2q-RxgyLB-yopCi0roGdOnzOODWYQeXo60Q5gpTdv-rkL0-fNn8ayLmzRoKNpx0_bYqmcbmW2uPdg1PZYX5EH9BXzC0HrqTUB5kL6Go_J5yXPGB2YdstozHxjwnbIDTuSuDs74E7fHNEt7SlAIkp_w0DapP6p_e3SJeLmWH4uBz6kgEBuI_RCR2bs5S2Q2SMerjRLQahKaWm0O7xw",
+    "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNkNTgwZjBhZjdhY2U2OThhMGNlZTdmMjMwYmNhNTk0ZGM2ZGJiNTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4NjU0OTMyMTI1ODAtOWM4M3NzdGN1YmozNWppZDQ2czZpOW1lajZ1ZHNjdDAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4NjU0OTMyMTI1ODAtOWM4M3NzdGN1YmozNWppZDQ2czZpOW1lajZ1ZHNjdDAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTIwNTU5ODIzNTUyODAxNjkyNTQiLCJlbWFpbCI6IjczNzgxNTg3MEBxcS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzE5MjE0Mjg3LCJuYW1lIjoiVW5jbGUgV2FuZyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLb3lZTWRHcXNoQ2ZnMVh6RVFOZlpiWTdxVE4wR0VKWkdXVF9hZm1MMWQ3OXkyS1E9czk2LWMiLCJnaXZlbl9uYW1lIjoiVW5jbGUiLCJmYW1pbHlfbmFtZSI6IldhbmciLCJpYXQiOjE3MTkyMTQ1ODcsImV4cCI6MTcxOTIxODE4NywianRpIjoiMGE2NDk2MzRiZmNiYjRiYjkwMDNlOGYwM2VkMzNlZTBjOWE0OTM3NiJ9.A13DS0Pwb0j-p5jWlhK7CcY219tnHeeQUxfnizWgPz7RHS2VXuzXSuwDFfPmMrIJN0By7tJmDd0nmI2hC9gUJfJTSkEJnGCUioOWdW9eG5yCtqjVKwPvfs71gSvxRBlzDdDVGQA8yuh-uAVuhPNkE45Q7658CAxdE2x3BfHG7AKa1sBbtPAdQaxNwQEGJOGlQA_3ApdA8H_K-gKGqE7mdaXlb1uIVaSWnOswPs8GjL-zqoBVhlzwGbwpWFtL-npcG2d8mTWhKd_5rQ2icKaJ11-4TYoXdf0pGXVPVcMN0Wg8tkfn4vaGPAfbeai_gc3EcJeoK6URsyxqLkNze2K_yQ",
     "select_by": "btn",
+    "bind_source": 1,
     "login_type": "google",
-    "seed": 1719155092594,
-    "apikey": "apikey_4hnmihpdv6190ayey",
-    "sign": "DC6052C06DAE3AD8875CFEAFF151B759",
+    "seed": 1719214588649,
+    "apikey": "apikey_5p16m1w5ynk1i49oj",
+    "sign": "18EE37F7CFF7EEA0D229A49A83FDA4BF",
         bind_source: 1,
         ref_name: getHashUrlParams('ref')
     };
@@ -128,6 +129,7 @@ const login = async (response: any, type: any, platform: any) => {
     show.value = false;
     if (data.code == 200) {
         message.success('Login success');
+        sensors.login(data.data.uid);
         loginPlatform(platform, true, '', true);
     } else {
         message.error('Login error');

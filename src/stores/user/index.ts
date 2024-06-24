@@ -49,7 +49,7 @@ export const useUserStore = defineStore({
                             this.userInfo = response.data;
                             this.Token = response.data.apikey;
 
-                            senSorsInit().identify(response.data.uid, true);
+                            // senSorsInit().identify(response.data.uid, true);
                             this.isPopupLogin = false;
                             resolve(response);
                         } else {
