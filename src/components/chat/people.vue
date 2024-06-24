@@ -5,8 +5,11 @@ import { useChatStore } from '@/stores/chat';
 import { useUserStore } from '@/stores/user';
 import { getHashUrlParams } from '@/utils/common';
 import delAi from '../popup/delAi.vue';
+import { useRouter } from 'vue-router';
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
+const isMobile = app?.appContext.config.globalProperties.$isMobile;
+const router = useRouter();
 
 const userStore = useUserStore();
 const emit = defineEmits(['changePosition']);
@@ -66,11 +69,19 @@ watch(() => ChatStore.bannerAssign, (newValue) => {
     });
 });
 const offset = [-15, 5] as const;
+
+const prev = () => {
+    router.push({ path: '/' });
+};
 </script>
 
 <template>
-    <div p-x-12 min-w-250 p-t-33 h-100p overflow-auto flex-column>
-        <div color-fff fs-20 font-weight-bold> Chat</div>
+    <div class="goHome" v-if="isMobile">
+        <img src="@/assets/images/prev_icon.svg" class="prev" @click="prev" />
+        <span>Chat</span>
+    </div>
+    <div p-x-12 min-w-250 p-t-33 h-100p overflow-auto flex-column class="MBox">
+        <div color-fff fs-20 font-weight-bold v-if="!isMobile"> Chat</div>
         <div h-54 m-b-10 flex-flex-start-center c-p
             class="border current" v-if="Object.keys(ChatStore.aiInfo).length !== 0 && !userStore.Token">
             <NImage width="37" height="37" m-x-8 border-radius-50p preview-disabled object-fit="cover"
@@ -167,4 +178,18 @@ const offset = [-15, 5] as const;
     border-radius: 10px;
 }
 
+@media screen and (max-width: 768px){
+    .goHome{
+        background: rgba(255, 255, 255, 0.1);
+        height: 0.58rem;
+        padding: 0 0.26rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.14rem;
+        color: #fff;
+    }
+    .MBox{
+        padding-top: 0.04rem;
+    }
+}
 </style>
