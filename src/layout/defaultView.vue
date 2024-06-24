@@ -28,7 +28,7 @@ watch(
 <template>
     <NDialogProvider>
         <NMessageProvider>
-            <NLayout position="absolute">
+            <NLayout position="absolute" class="Mfixed">
                 <NLayoutHeader style="height: 64px">
                     <HeaderView />
                 </NLayoutHeader>
@@ -83,6 +83,11 @@ watch(
 
     .retractionM {
         width: 0 !important;
+    }
+    .Mfixed{
+        position: fixed !important;
+        left: 0;
+        top: 0;
     }
 
 }
