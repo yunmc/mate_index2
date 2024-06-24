@@ -806,6 +806,9 @@ onMounted(async () => {
     .textareaBox {
         width: 80%;
     }
+    .tips{
+        width: 100%;
+    }
 
     .top {
         height: 0.58rem;

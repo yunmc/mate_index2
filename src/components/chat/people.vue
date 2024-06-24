@@ -182,7 +182,6 @@ const prev = () => {
     .goHome{
         background: rgba(255, 255, 255, 0.1);
         height: 0.58rem;
-        padding: 0 0.26rem;
         display: flex;
         align-items: center;
         font-size: 0.14rem;

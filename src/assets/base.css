@@ -110,9 +110,11 @@ body {
   /* 确保页面最小高度填满整个屏幕 */
   html,
   body {
-    min-height: 100vh;
+    height: 100vh;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    background-color: #131313;
   }
 
   * {
