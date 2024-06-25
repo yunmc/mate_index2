@@ -84,7 +84,8 @@ const toBecomePro = () => {
         </div>
         <NCarousel autoplay :interval="5000" show-arrow v-if="ChatStore.aiInfo.posters">
             <img v-for="item in ChatStore.aiInfo.posters" :key="item" class="carousel-img" :src="item"
-                @click="chatBurialPoint('海报图')" :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(20px)' : ''" />
+                @click="chatBurialPoint('海报图')"
+                :style="userStore.userInfo?.vip_info?.vip_type == 0 || !userStore.Token ? 'filter: blur(20px)' : ''" />
             <template #arrow="{ prev, next }">
                 <div class="custom-arrow" v-if="ChatStore.aiInfo.posters.length > 1" flex-between-center
                     @click="chatBurialPoint('切换海报图')">
@@ -258,6 +259,17 @@ const toBecomePro = () => {
 }
 
 @media screen and (max-width: 768px) {
+    .custom-dots {
+        bottom: 1.6rem;
+        padding: 0;
+
+        li {
+            &::marker {
+        color: rgba(255, 255, 255, 0) !important;
+            }
+        }
+    }
+
     .banner {
         .prevM {
             display: block;
