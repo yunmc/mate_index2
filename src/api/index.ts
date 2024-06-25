@@ -38,6 +38,7 @@ class RequestHttp {
                 config.data = Object.assign({}, config.data, GenerateKey());
                 config.headers!['x-client'] = 'h5-2';
                 config.headers!['X-Version'] = '1.2.5';
+                config.headers!['X-properties'] = encodeURIComponent(JSON.stringify(properties));
                 return config;
             },
             (error: AxiosError) => {
