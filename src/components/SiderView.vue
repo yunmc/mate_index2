@@ -104,7 +104,7 @@ const windowOpen = (node_name:string,url: string) => {
             </p>
         </div>
         <div class="menu-bottom" p-30>
-            <p @click="windowOpen('X','https://x.com/Wim1218')" flex-flex-start-center h-48 w-100p border-1
+            <p @click="windowOpen('X','https://x.com/Wim81218')" flex-flex-start-center h-48 w-100p border-1
                 border-414267 border-solid color-FFFFFF fs-12 border-radius-10 c-p m-b-16
                 :style="{ width: isClicked ? '48px' : '100%', overflow: isClicked ? 'hidden' : 'initial', transition: 'all 0.5s' }">
                 <img src="@/assets/images/Twitter_icon.svg" m-l-12 m-r-10 square-24 />X

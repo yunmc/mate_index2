@@ -98,7 +98,7 @@ const toBecomePro = () => {
                             <img square-15 src="@/assets/images/arrow-right.webp" />
                         </div>
                     </a>
-                    <a href="https://cdn-mate.matelink.com/image/resource/p_policy2.html" @click="toLink('Privacy terms ')"
+                    <a href="https://cdn-mate.matelink.com/image/resource/p_policy4.html" @click="toLink('Privacy terms ')"
                         target="_blank">
                         <div flex-between-center p-y-10 c-p>
                             <p color-ffffff fs-12 flex-start-center> <img square-15 m-r-6

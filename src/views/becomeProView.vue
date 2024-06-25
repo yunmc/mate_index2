@@ -270,7 +270,7 @@ const paypal = async () => {
                     align-items: center;
 
                     img {
-                        margin-right: 4px;
+                        // margin-right: 4px;
                     }
 
                     span {

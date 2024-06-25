@@ -176,9 +176,9 @@ const loginPlatform = (platform: any, is_success: any, fail_reason: any, is_firs
                                     up</span></p> -->
                             <p color-coolGray fs-12 len-18 text-center>
                                 By continuing，you agree to our <a
-                                    href="https://cdn-mate.matelink.com/web/agreement-en.html" target="_blank"
+                                    href="https://cdn-mate.matelink.com/image/resource/p_agreement.html" target="_blank"
                                     color-8C80FF style="border-bottom: 1px solid #8C80FF;">User Agreement</a> and<br>
-                                <a href="https://cdn-mate.matelink.com/web/service-en.html" target="_blank" color-8C80FF
+                                <a href="https://cdn-mate.matelink.com/image/resource/p_policy4.html" target="_blank" color-8C80FF
                                     style="border-bottom: 1px solid #8C80FF;">Privacy Policy</a>
                             </p>
                         </div>

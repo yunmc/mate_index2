@@ -10,6 +10,7 @@ import { verifySend, getMsgPlayer, getGreet } from '@/api/chat';
 import { getHashUrlParams } from '@/utils/common';
 const app = getCurrentInstance();
 const sensors = app?.appContext.config.globalProperties.$sensors;
+const isMobile = app?.appContext.config.globalProperties.$isMobile;
 const userStore = useUserStore();
 const ChatStore = useChatStore();
 const message = ref('');
@@ -235,6 +236,10 @@ const sendMessage = async () => {
 };
 
 const unlockImage = async (item: any, index: any, msgId: any, picId: any) => {
+    if(userStore.userInfo?.vip_info?.vip_type == 0){
+        router.push('/becomePro');
+        return;
+    }
     // loadRequest.value = true;
     ChatStore.isScroll = false;
     const response: any = await ChatStore.getUnlockImage(item, index);
@@ -400,6 +405,10 @@ onMounted(async () => {
     }
 });
 
+const test = () => {
+    alert(111)
+};
+
 </script>
 
 <template>
@@ -536,8 +545,11 @@ onMounted(async () => {
                     onkeydown="if(event.keyCode==13)return false;" />
             </NConfigProvider>
             <n-spin v-if="loadSend" class="send_message" square-48 position-absolute r-10 top-50p size="small" />
+            <img v-else-if="isMobile" class="send_message" square-48 @touchstart="sendMessage()" c-p position-absolute r-10 top-50p
+                src="@/assets/images/send.svg" />
             <img v-else class="send_message" square-48 @click="sendMessage()" c-p position-absolute r-10 top-50p
                 src="@/assets/images/send.svg" />
+
         </div>
     </div>
     <div v-if="loadRequest" position-absolute top-50p left-50p>
