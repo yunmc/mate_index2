@@ -87,9 +87,11 @@ const gotoDevin = () => {
 };
 
 onMounted(() => {
-    sensors.setProfile({ from_our_platform: 'ponrh.ai'});
+    sensors.setOnceProfile({ from_our_platform: 'ponrh.ai'});
     if (getHashUrlParams('ref')) {
-        sensors.setProfile({ref_name: 'pornh.ai:' + getHashUrlParams('ref') });
+        sensors.setOnceProfile({ref_name: 'pornh.ai:' + getHashUrlParams('ref') });
+    }else{
+        sensors.setOnceProfile({ref_name: 'default_source' });
     }
     _getBanner()
     if (homeStore.list.length < 1) {
