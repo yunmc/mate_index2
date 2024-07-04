@@ -168,8 +168,14 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
             <source :src="audioUrl" type="audio/mpeg" />
         </audio>
         <div max-w-1380 m-a class="mainBox">
-            <img v-if="!getHashUrlParams('ref')" src="@/assets/images/banner.png" w-100p m-b-40 c-p class="banner"
-                @click="gotoDevin()" />
+            <img
+                v-if="!getHashUrlParams('ref')"
+                src="@/assets/images/banner.png"
+                w-100p m-b-40 c-p
+                class="banner"
+                style="object-fit: cover;object-position: 50% 50%;"
+                @click="gotoDevin()"
+            />
             <img v-else :src="bannerInfo.banner_url" w-100p m-b-40 c-p class="banner"
                 @click="toDetails(bannerInfo, 1)" />
             <div d-grid justify-content-space-between style="grid-template-columns: repeat(auto-fill, 262px)"
