@@ -81,9 +81,10 @@ const toDetails = (item: any, type: number) => {
     // }
 };
 const gotoDevin = () => {
-    const devin = homeStore.list.find((item: any) => item.ai_uid === 'ai_user_f9f55d887c3c453ebf4b00f7');
-    if (!devin) return;
-    toDetails(devin, 2);
+    // const devin = homeStore.list.find((item: any) => item.ai_uid === 'ai_user_f9f55d887c3c453ebf4b00f7');
+    // if (!devin) return;
+    // toDetails(devin, 2);
+    toDetails(homeStore.list[0], 1);
 };
 
 onMounted(() => {
@@ -242,7 +243,7 @@ const url = 'https://yinhehh.oss-cn-beijing.aliyuncs.com/upload/2K/A%E4%BC%A4%E5
     scroll-behavior: smooth;
 
     .banner {
-        height: 418px;
+        // height: 418px;
     }
 }
 

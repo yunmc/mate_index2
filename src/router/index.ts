@@ -39,6 +39,14 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            path: '/dashboard',
+            component: () => import('@/views/dashboard.vue'),
+            meta: {
+                title: '数据看板',
+                keepAlive: true
+            }
+        }
     ],
 });
 

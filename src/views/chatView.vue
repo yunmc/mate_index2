@@ -3,6 +3,7 @@ import { onMounted, ref, provide, watch } from 'vue';
 import { NGi, NGrid, NSpin } from 'naive-ui';
 import { useChatStore } from '@/stores/chat';
 import { useUserStore } from '@/stores/user';
+import { getHashUrlParams } from '@/utils/common';
 const userStore = useUserStore();
 const ChatStore = useChatStore();
 import ChatPeople from '../components/chat/people.vue';
@@ -20,6 +21,13 @@ const changePosition = (position: number) => {
     changeStatus.value++;
 };
 onMounted(async () => {
+    if (getHashUrlParams('Ai_id')) {
+        const item = {
+            ai_uid: getHashUrlParams('Ai_id'),
+        }
+        ChatStore.setAiInfo(item);
+        ChatStore.mainPosition = 100;
+    }
     if (userStore.Token != '') {
         await ChatStore.getInitChat();
         await ChatStore.getInitIm();

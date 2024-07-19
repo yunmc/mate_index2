@@ -537,7 +537,7 @@ const test = () => {
             <img v-if="ChatStore.aiInfo.private_date_btn" h-26 m-r-5 c-p src="@/assets/images/fig_icon_4.webp" @click="openApp('Date')" />
         </div> -->
         <div position-relative>
-            <NConfigProvider preflight-style-disabled w-90p class="textareaBox">
+            <NConfigProvider preflight-style-disabled class="textareaBox">
                 <NInput placeholder="Say something…" type="textarea" class="textarea" v-model:value="message" :autosize="{
                     minRows: 1,
                     maxRows: 5,
@@ -812,6 +812,9 @@ const test = () => {
 
 .send_message {
     margin-top: -24px;
+}
+.textareaBox{
+    max-width: calc(100% - 70px);
 }
 
 @media screen and (max-width: 768px) {

@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref, reactive,getCurrentInstance  } from 'vue';
 import { NGi, NGrid, NSpin } from 'naive-ui';
 import { useUserStore } from '@/stores/user';
 import { useOrderStore } from '@/stores/order';
+import { useRouter } from 'vue-router';
 const userStore = useUserStore();
 const oredrStore = useOrderStore();
+const app = getCurrentInstance();
+const isMobile = app?.appContext.config.globalProperties.$isMobile;
+const router = useRouter();
 const show = ref(false);
 const mealList = reactive([
     {
@@ -54,10 +58,17 @@ const paypal = async () => {
         }
     }
 };
+const prev = () => {
+    router.push({ path: '/' });
+};
 </script>
 
 <template>
     <div class="becomePro">
+        <div class="goHome" v-if="isMobile">
+            <img src="@/assets/images/prev_icon.svg" class="prev" @click="prev" />
+            <span>Become Pro</span>
+        </div>
         <div class="proCont">
             <NSpin :show="show">
                 <div class="proContLeft">
@@ -120,8 +131,11 @@ const paypal = async () => {
     width: 100%;
     height: 100%;
     background: #13102b;
-    overflow: hidden;
-
+    overflow: auto;
+&::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
     .proCont {
         width: 960px;
         height: 600px;
@@ -293,6 +307,15 @@ const paypal = async () => {
 
 @media screen and (max-width: 768px) {
     .becomePro {
+        .goHome {
+
+background: rgba(255, 255, 255, 0.1);
+height: 0.58rem;
+display: flex;
+align-items: center;
+font-size: 0.14rem;
+color: #fff;
+}
         .proCont {
             width: 100%;
             height: auto;
@@ -331,6 +354,13 @@ const paypal = async () => {
 
                         .productName {
                             font-size: 0.2rem;
+                            .desc {
+                                font-size: 0.1rem;
+                                height: 0.2rem;
+                                line-height: 0.15rem;
+                                width: auto;
+                                padding: 0 0.1rem;
+                            }
                         }
 
                         .productPrice {
@@ -362,6 +392,10 @@ const paypal = async () => {
                     margin-top: 0.2rem;
                     font-size: 0.16rem;
                     line-height: 0.45rem;
+                }
+                
+                .addImg {
+                    display: none;
                 }
             }
 
